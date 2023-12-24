@@ -14,6 +14,7 @@ from Data_base.Create_new_table import Create_table
 from Input_data.Add_starting_balance import StartBalance
 from Input_data.Add_fixed_expense import Add_fixed_expense
 from Input_data.Add_expense import Add_Expense
+from Input_data.Add_income import Add_Income
 import subprocess
 
 db_host = 'localhost'
@@ -27,6 +28,7 @@ table_creator = Create_table()
 Starter_balance = StartBalance()
 add_fixed_expense = Add_fixed_expense()
 add_expense = Add_Expense()
+add_income = Add_Income()
 
 
 
@@ -44,12 +46,12 @@ def Print_menu ():
     print ("")
     print ("\t\t    Main Menu")
     print ("Options Below")
-    print ("[1] Add Fixed Expense")
-    print ("[2] Add Expense")
-    print ("[3] Add income")
+    print ("[1] Add Fixed Expense") # works 
+    print ("[2] Add Expense")# works 
+    print ("[3] Add income")# works 
     print ("[4] Create a new data base") # works 
     print ("[5] Add a new year budget") # works 
-    print ("[6] Add_sta6rting_balance") #works 
+    print ("[6] Add_starting_balance") #works 
     
     Display_menu()
 
@@ -72,7 +74,14 @@ def Display_menu():
         Category = "test"
         add_expense.Add_expense(db_host, db_user, db_password, db_name, Expense_date, note, amount, Category) 
     elif choice == 3:
-        print("Choice is ",choice)   
+        print("Choice is ",choice)
+        print ("your choice is ", choice)
+        Income_date = "2023-03-23"
+        amount = 100
+        note = "note income test"
+        Category = "test"
+        add_income.Add_income(db_host, db_user, db_password, db_name, Income_date, note, amount, Category) 
+    
     elif choice == 4:
         name = input("What would the the database name to be: ")
         db_name = name
@@ -129,7 +138,7 @@ Print_menu ()
 
 #source venv/bin/activate
 
-#TODO Create transfer money module and connect it to post transcations 
-#TODO create add expense module and connect it to post transacation
-#TODO create add incoem module and connect it to post transaction 
-#TODO create view budget moudle
+#TODO Create transfer money module and connect it to post transaction 
+#TODO create add expense module and connect it to post transaction
+#TODO create add income module and connect it to post transaction 
+#TODO create view budget module
