@@ -124,7 +124,7 @@ def Display_menu():
             checking_account = float(input("Checking account balance :"))
             bail_out = float(input("bail_out account balance :"))
             saveings = float(input("saveings account balance :"))
-            Starter_balance.add_starting_balance(db_host, db_user,db_password,db_name,table_name,year,checking_account,bail_out, saveings)
+            Starter_balance.add_starting_balance(db_host, db_user,db_password,db_name,tablbbe_name,year,checking_account,bail_out, saveings)
         else:
             print("Invalid choice")
             print (f"connect to {db_name}? [y/n]")

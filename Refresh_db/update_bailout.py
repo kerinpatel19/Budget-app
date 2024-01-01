@@ -3,7 +3,7 @@ import mysql.connector
 
 class Update_bailout_account:
     @classmethod
-    def update_bailout_account(cls, db_host, db_user, db_password, db_name, table_name, year):
+    def Update_bailout_account(cls, db_host, db_user, db_password, db_name, table_name, year):
         # Establish a connection to MySQL
         db_connection = mysql.connector.connect(
             host=db_host,

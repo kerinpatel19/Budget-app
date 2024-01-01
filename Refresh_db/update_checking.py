@@ -3,7 +3,7 @@ import mysql.connector
 
 class update_checking_account:
     @classmethod
-    def update_Checking_account(cls,db_host, db_user,db_password,db_name,table_name,year):
+    def Update_Checking_account(cls,db_host, db_user,db_password,db_name,table_name,year):
         # Establish a connection to MySQL
         db_connection = mysql.connector.connect(
             host=db_host,
@@ -39,12 +39,12 @@ class update_checking_account:
             
             # Fetch the row
             row = cursor.fetchone()
-            Transfer_In = float(row[6])
-            Transfer_Out = float(row[7])
+            Transfer_In = float(row[7])
+            Transfer_Out = float(row[6])
             Income = float(row[8])
             Expense = float(row[9])
             
-            Insert_Checking_account = daybefore_Checking_account + Income - Expense + Transfer_In - Transfer_Out
+            Insert_Checking_account = (daybefore_Checking_account + Income + Transfer_In)- Expense  - Transfer_Out
             
             # Construct and execute the INSERT query
             insert_query = f"""
