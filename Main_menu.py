@@ -15,6 +15,7 @@ from Input_data.Add_starting_balance import StartBalance
 from Input_data.Add_fixed_expense import Add_fixed_expense
 from Input_data.Add_expense import Add_Expense
 from Input_data.Add_income import Add_Income
+from Input_data.Create_transfer import Transfer_money
 import subprocess
 
 db_host = 'localhost'
@@ -29,7 +30,7 @@ Starter_balance = StartBalance()
 add_fixed_expense = Add_fixed_expense()
 add_expense = Add_Expense()
 add_income = Add_Income()
-
+Transfer = Transfer_money()
 
 
 def Print_menu ():
@@ -52,6 +53,7 @@ def Print_menu ():
     print ("[4] Create a new data base") # works 
     print ("[5] Add a new year budget") # works 
     print ("[6] Add_starting_balance") #works 
+    print ("[7] Create Transfer") 
     
     Display_menu()
 
@@ -81,14 +83,12 @@ def Display_menu():
         note = "note income test"
         Category = "test"
         add_income.Add_income(db_host, db_user, db_password, db_name, Income_date, note, amount, Category) 
-    
     elif choice == 4:
         name = input("What would the the database name to be: ")
         db_name = name
         # Call the method with the necessary parameters
         database_creator.create_database_main(db_host, db_user, db_password, db_name)
         Print_menu ()
-    
     elif choice == 5:
         print ("connect to recent database [y/n]")
         choice_2 = (input("Choice :"))
@@ -106,7 +106,6 @@ def Display_menu():
             print (f"connect to {db_name}? [y/n]")
             choice_2 = (input("Choice :"))
         Print_menu ()
-    
     elif choice == 6:
         print ("connect to recent database [y/n]")
         choice_2 = (input("Choice :"))
@@ -124,7 +123,30 @@ def Display_menu():
             checking_account = float(input("Checking account balance :"))
             bail_out = float(input("bail_out account balance :"))
             saveings = float(input("saveings account balance :"))
-            Starter_balance.add_starting_balance(db_host, db_user,db_password,db_name,tablbbe_name,year,checking_account,bail_out, saveings)
+            Starter_balance.add_starting_balance(db_host, db_user,db_password,db_name,table_name,year,checking_account,bail_out, saveings)
+        else:
+            print("Invalid choice")
+            print (f"connect to {db_name}? [y/n]")
+            choice_2 = (input("Choice :"))
+            
+    elif choice == 7:
+        print ("connect to recent database [y/n]")
+        choice_2 = (input("Choice :"))
+        if choice_2 == "y" or "Y":
+            Transfer_date = input("Enter Note :")
+            From_account = input("Enter Note :")
+            To_account = input("Enter Note :")
+            note = input("Enter Note :")
+            amount = float(input("Enter Amount :"))
+            Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount)
+        elif choice_2 == "n" or "N":
+            db_name = input("Database name :")
+            Transfer_date = input("Enter Note :")
+            From_account = input("Enter Note :")
+            To_account = input("Enter Note :")
+            note = input("Enter Note :")
+            amount = float(input("Enter Amount :"))
+            Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount)
         else:
             print("Invalid choice")
             print (f"connect to {db_name}? [y/n]")

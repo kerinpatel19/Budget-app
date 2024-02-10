@@ -1,6 +1,6 @@
 from Input_data.Create_transfer import Transfer_money
 
-add_expense = Transfer_money()
+Transfer = Transfer_money()
 
 db_host = 'localhost'
 db_user = 'root'
@@ -12,7 +12,7 @@ Transfer_date = "2023-02-21"
 note = "test"
 amount = 100.00
 
-add_expense.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount)
+Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount)
         
         
         

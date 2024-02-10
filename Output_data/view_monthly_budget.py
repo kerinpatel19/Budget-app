@@ -13,15 +13,21 @@ bailout_account_update = Update_bailout_account()
 
 class view_budget:
     @classmethod
-    def view_Budget(cls, db_host, db_user, db_password, db_name, start_date ):
+    def view_Budget(cls, db_host, db_user, db_password, db_name, month_name, year):
+        # Convert month name to its corresponding number
+        month_number = int(datetime.strptime(month_name, "%B").month)
         
-        if isinstance(start_date, str):
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')
-        # get the nd date for the loop 
-        end_date = start_date + timedelta(days=31)
-    
+        # Calculate the first date of the month
+        first_date_of_month = datetime(year, month_number, 1)
+        
+        # Calculate the last date of the month
+        next_month = first_date_of_month.replace(day=28) + timedelta(days=4)
+        last_date_of_month = next_month - timedelta(days=next_month.day)
+        
+        start_date = first_date_of_month
+        end_date = last_date_of_month
+        
         # Access the year attribute after ensuring start_date is a datetime object
-        year = start_date.year
         table_name = f"Budget{year}"
         
         # Establish a connection to MySQL
@@ -32,19 +38,34 @@ class view_budget:
             database=db_name
         )
         cursor = db_connection.cursor()
+        return_list = []
         current_date = start_date
-        
-        
-        while current_date < end_date:
-            
-            # Fetch the row
-            query = f"SELECT * FROM {table_name} WHERE date = %s"
-            cursor.execute(query, (current_date,))
-            row = cursor.fetchone()
 
-            if row is not None:
-                print(f"[{row[0]}] checking account :-{row[1]} Bail out :-{row[2]} Savings :- {row[4]} Transfer out {row[6]} Transfer In {row[7]} Income {row[8]} Expense {row[9]}")
-                current_date = current_date + timedelta(days=1)
-            else : 
-                print("Error")
-                break
+        while current_date <= end_date:
+            
+            lookup_date = current_date.strftime("%Y-%m-%d")
+            try:
+                # Fetch the row
+                query = f"SELECT * FROM {table_name} WHERE date = %s"
+                cursor.execute(query,(lookup_date,))
+                row = cursor.fetchone()
+
+                if row is not None:
+                    #print(f"[{row[0]}] checking account :-{row[1]} Bail out :-{row[2]} Savings :- {row[4]} Transfer out {row[6]} Transfer In {row[7]} Income {row[8]} Expense {row[9]}")
+                    list_format = [
+                        lookup_date,
+                        float(row[1]),
+                        float(row[2]),
+                        float(row[4])
+                    ]
+                    return_list.append(list_format)
+                else: 
+                    print("No data found for date:", lookup_date)
+            except Exception as e:
+                print("Error executing query:", e)
+
+            
+            current_date = current_date + timedelta(days=1)
+        
+        print(return_list)
+        return return_list
