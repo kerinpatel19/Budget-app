@@ -30,7 +30,6 @@ class Controller:
             print("Error: Database key file not found.")
         except Exception as e:
             print(f"Error reading database key file: {e}")
-        print(print("step 2 done"))
 
         return db_host, db_user, db_password, db_name
 
@@ -38,7 +37,6 @@ class Controller:
     def update_table(self,lookup_month_name, year):
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.view_budget.view_Budget(db_host,db_user, db_password, db_name, lookup_month_name, year)
-        print("step 3 done")
         return return_list
 
 

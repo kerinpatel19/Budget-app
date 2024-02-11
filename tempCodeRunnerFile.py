@@ -1,2 +1,1 @@
-
-        self.create_input_screen_buttons_frame()
+source venv/bin/activate

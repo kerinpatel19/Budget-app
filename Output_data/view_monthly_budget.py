@@ -67,5 +67,4 @@ class view_budget:
             
             current_date = current_date + timedelta(days=1)
         
-        print(return_list)
         return return_list
