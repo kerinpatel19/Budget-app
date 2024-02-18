@@ -53,10 +53,14 @@ class view_budget:
                 if row is not None:
                     #print(f"[{row[0]}] checking account :-{row[1]} Bail out :-{row[2]} Savings :- {row[4]} Transfer out {row[6]} Transfer In {row[7]} Income {row[8]} Expense {row[9]}")
                     list_format = [
-                        lookup_date,
-                        float(row[1]),
-                        float(row[2]),
-                        float(row[4])
+                        lookup_date, #date
+                        float(row[1]), #checking
+                        float(row[2]), #bail out
+                        float(row[4]), #saving
+                        float(row[6]), #transfer out
+                        float(row[7]), #transfer in 
+                        float(row[8]), #income
+                        float(row[9]) #expense
                     ]
                     return_list.append(list_format)
                 else: 

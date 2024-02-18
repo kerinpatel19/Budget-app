@@ -1,8 +1,8 @@
 import tkinter as tk
+from tkinter import ttk
 from datetime import datetime, timedelta
 from controller import Controller 
 from dateutil.relativedelta import relativedelta
-
 
 class BudgetApp:
     def __init__(self, root):
@@ -12,10 +12,12 @@ class BudgetApp:
         self.root.title("Budget App")
         self.root.config(background="#ffffff")
         self.current = datetime.now()
+        self.accounts = ["Checking", "Bail out", "saving"]
 
         self.create_all_frames()
         self.create_control_buttons_frame()
         self.default_input_area_screen()
+        self.current_month_budget_table_frame()
 
         # Adjust the app size to fit the content
         self.root.update_idletasks()
@@ -28,12 +30,15 @@ class BudgetApp:
         self.budget_table_frame = tk.LabelFrame(self.root, text="Budget Table")
         self.budget_table_frame.grid(row=0, column=0, sticky="w",)
         
-        self.frame2 = tk.Frame(self.root)
-        self.frame2.grid(row=0, column=1, rowspan=4, columnspan= 2, sticky="nsew")
+        self.frame2_control = tk.Frame(self.root)
+        self.frame2_control.grid(row=0, column=1, rowspan=4, columnspan= 2, sticky="nsew")
         
-        self.control_frame = tk.LabelFrame(self.frame2, text="Budget Controls")
+        self.control_frame = tk.LabelFrame(self.frame2_control, text="Budget Controls")
         self.control_frame.grid(row=1, column=0)
-        self.current_month_budget_table_frame()
+        
+        
+        self.control_frame_view = tk.LabelFrame(self.frame2_control, text="Input area")
+        self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
         
     
     def clear_budget_screen(self):
@@ -49,7 +54,9 @@ class BudgetApp:
         todays_month= self.current.strftime("%B")
         return_list = self.Controller.update_table(todays_month,todays_year)
         
-        labels = ["        Date         ", "Main Account", "Saving Account", "Bail-Out Account"]
+        labels = ["        Date         ", "Main Account", "Bail-Out Account","Saving Account", 
+                "transfer out", "transfer In",
+                "income", "expense"]
         for col, label in enumerate(labels):
             tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
@@ -58,7 +65,9 @@ class BudgetApp:
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
                 entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
-                entry.grid(row=row, column=col)      
+                entry.grid(row=row, column=col)   
+        self.monthly_overview(return_list)
+        
     def last_month_budget_table_frame(self):
         
         self.clear_budget_screen()
@@ -68,11 +77,14 @@ class BudgetApp:
         year = self.current_month_displayed.year
         month= self.current_month_displayed.strftime("%B")
         return_list = self.Controller.update_table(month,year)
-        labels = ["        Date         ", "Main Account", "Saving Account", "Bail-Out Account"]
+        labels = ["        Date         ", "Main Account", "Bail-Out Account","Saving Account", 
+                "transfer out", "transfer In",
+                "income", "expense"]
         for col, label in enumerate(labels):
             tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
         data = return_list
+        self.monthly_overview(return_list)
 
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
@@ -86,7 +98,31 @@ class BudgetApp:
         year = self.current_month_displayed.year
         month= self.current_month_displayed.strftime("%B")
         return_list = self.Controller.update_table(month,year)
-        labels = ["        Date         ", "Main Account", "Saving Account", "Bail-Out Account"]
+        labels = ["        Date         ", "Main Account", "Bail-Out Account","Saving Account", 
+                "transfer out", "transfer In",
+                "income", "expense"]
+        for col, label in enumerate(labels):
+            tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
+
+        data = return_list
+        self.monthly_overview(return_list)
+        
+        for row, entry_data in enumerate(data, start=3):
+            for col, value in enumerate(entry_data):
+                entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                entry.grid(row=row, column=col)
+                
+    def custom_month_budget_table_frame(self, date):
+        self.clear_budget_screen()
+        date_obj = datetime.strptime(date, '%Y-%m-%d')
+        self.current_month_displayed = date_obj
+        custom_year = self.current_month_displayed.year
+        custom_month= self.current_month_displayed.strftime("%B")
+        return_list = self.Controller.update_table(custom_month,custom_year)
+        
+        labels = ["        Date         ", "Main Account", "Bail-Out Account","Saving Account", 
+                "transfer out", "transfer In",
+                "income", "expense"]
         for col, label in enumerate(labels):
             tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
@@ -95,7 +131,8 @@ class BudgetApp:
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
                 entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
-                entry.grid(row=row, column=col)
+                entry.grid(row=row, column=col)   
+        self.monthly_overview(return_list)
     def create_control_buttons_frame(self):
 
         tk.Button(self.control_frame, text="Transfer", width=5, height=4, command= self.create_transfer_screen).grid(row=0, column=0, columnspan=1, rowspan=1, sticky="ew")
@@ -106,40 +143,203 @@ class BudgetApp:
         tk.Button(self.control_frame, text="last month", height=2, command=self.last_month_budget_table_frame).grid(row=2, column=0, columnspan=1, rowspan=1, sticky="n")
         tk.Button(self.control_frame, text="Current month", height=2, command=self.current_month_budget_table_frame).grid(row=2, column=1, columnspan=2, rowspan=2, sticky="ew")
         tk.Button(self.control_frame, text="Next month", height=2, command=self.next_month_budget_table_frame).grid(row=2,column=3, columnspan=1, rowspan=1, sticky="n")
-        
+  
 
-   #row 2   frame 2  
-    def default_input_area_screen(self):
-        self.control_frame_view = tk.LabelFrame(self.frame2, text="Input area")
-        self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)  # Align to bottom with padding
+
+    #row 2   frame 2  
+    def default_input_area_screen(self):  # Align to bottom with padding
         tk.Label(self.control_frame_view, text="Text", width=20, height=10).grid(row=1, column=0, rowspan=4, sticky="n")
     def create_transfer_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
-        self.control_frame_view.config(text="Transfer Form" , bg="#8e9bb9")
+        self.control_frame_view.config(text="transfer Form", bg="#9cbce4")
 
-        # Create transfer input form
-        tk.Label(self.control_frame_view, text="Transfer entry data here", width=20, height=10).grid(row=0, column=0)
-        # Add relevant input fields and buttons for transfer screen
+        
+        # Create "From Account" and "To Account" dropdowns
+        self.from_account = tk.StringVar()
+        self.to_account = tk.StringVar()
+
+        tk.Label(self.control_frame_view, text="From Account:").grid(row=0, column=0)
+        from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.from_account, values=self.accounts)
+        from_dropdown.grid(row=0, column=1)
+
+        tk.Label(self.control_frame_view, text="To Account:").grid(row=1, column=0)
+        to_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.to_account, values=self.accounts)
+        to_dropdown.grid(row=1, column=1)
+
+        def update_to_options(*args):
+            selected_from = self.from_account.get()
+            new_accounts = [account for account in self.accounts if account != selected_from]
+            to_dropdown['values'] = new_accounts
+
+        self.from_account.trace("w", update_to_options)
+                
+        tk.Label(self.control_frame_view, text="Date: ").grid(row=2, column=0)
+        transfer_date_entry = tk.Entry(self.control_frame_view)
+        transfer_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
+        transfer_date_entry.bind("<FocusIn>", lambda event: transfer_date_entry.delete(0, "end"))  # Remove text on focus
+        transfer_date_entry.grid(row=2, column=1)
+
+        tk.Label(self.control_frame_view, text="Note:").grid(row=3, column=0)
+        note_entry = tk.Entry(self.control_frame_view)
+        note_entry.insert(0, "ABC...") #Set initial text
+        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0,"end")) # remove text on key release
+        note_entry.grid(row=3, column=1)
+
+        tk.Label(self.control_frame_view, text="Amount:").grid(row=4, column=0)
+        amount_entry = tk.Entry(self.control_frame_view)
+        amount_entry.insert(0, "00.00") #set initial text
+        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end")) #remove text on focus
+        amount_entry.grid(row=4, column=1)
+
+        def submit_transfer():
+            from_account = self.from_account.get()
+            to_account = self.to_account.get()
+            transfer_date = transfer_date_entry.get()
+            note = note_entry.get()
+            amount = float(amount_entry.get())
+            category = "transfer"  
+            # Call the Controller's method to handle the transfer submission
+            self.Controller.Create_transfer(from_account, to_account, transfer_date, note, amount)
+
+            # Clear the input fields
+            from_dropdown.set('')
+            to_dropdown.set('')
+            transfer_date_entry.delete(0, tk.END)
+            note_entry.delete(0, tk.END)
+            amount_entry.delete(0, tk.END)
+            
+            # Show a label over the Submit button
+            submit_label = tk.Label(self.control_frame_view, text="transfer submitted successfully!")
+            submit_label.grid(row=5, column=1)
+
+            # Schedule a function to hide the label after 2 seconds
+            self.root.after(2000, submit_label.grid_forget)
+
+            # Clear the entry fields
+            transfer_date_entry.delete(0, 'end')
+            note_entry.delete(0, 'end')
+            amount_entry.delete(0, 'end')
+            
+            self.custom_month_budget_table_frame(transfer_date)
+        
+        # Create a submit button
+        submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_transfer)
+        submit_button.grid(row=5)
+        
     def create_income_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
         self.control_frame_view.config(text="Income Form", bg="#9cbce4")
 
-        # Create transfer input form
-        tk.Label(self.control_frame_view, text="Income entry data here" , width=20, height=10).grid(row=0, column=0)
+        
+        tk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
+        income_date_entry = tk.Entry(self.control_frame_view)
+        income_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
+        income_date_entry.bind("<FocusIn>", lambda event: income_date_entry.delete(0, "end"))  # Remove text on focus
+        income_date_entry.grid(row=1, column=1)
+
+        tk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
+        note_entry = tk.Entry(self.control_frame_view)
+        note_entry.insert(0, "ABC...") #Set initial text
+        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0,"end")) # remove text on key release
+        note_entry.grid(row=2, column=1)
+
+        tk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
+        amount_entry = tk.Entry(self.control_frame_view)
+        amount_entry.insert(0, "00.00") #set initial text
+        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end")) #remove text on focus
+        amount_entry.grid(row=3, column=1)
+
+        def submit_income():
+            income_date = income_date_entry.get()
+            note = note_entry.get()
+            amount = float(amount_entry.get())
+            category = "Income"  
+            # Call the Controller's method to handle the income submission
+            self.Controller.add_transaction(income_date, note, amount, category)
+            # Clear the input fields
+            income_date_entry.delete(0, tk.END)
+            note_entry.delete(0, tk.END)
+            amount_entry.delete(0, tk.END)
+            
+            # Show a label over the Submit button
+            submit_label = tk.Label(self.control_frame_view, text="Income submitted successfully!")
+            submit_label.grid(row=5, column=1)
+
+            # Schedule a function to hide the label after 2 seconds
+            self.root.after(2000, submit_label.grid_forget)
+
+            # Clear the entry fields
+            income_date_entry.delete(0, 'end')
+            note_entry.delete(0, 'end')
+            amount_entry.delete(0, 'end')
+            
+            self.custom_month_budget_table_frame(income_date)
+        
+        # Create a submit button
+        submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_income)
+        submit_button.grid(row=5)
+        
+        
+        
         # Add relevant input fields and buttons for transfer screen
     def create_expense_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
-        self.control_frame_view.config(text="expense Form", bg="#d5d5e1")
+        self.control_frame_view.config(text="Expense Form", bg="#9cbce4")
 
-        # Create transfer input form
-        tk.Label(self.control_frame_view, text="expense entry data here" , width=20, height=10).grid(row=0, column=0)
-        # Add relevant input fields and buttons for transfer screen
+        
+        tk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
+        expense_date_entry = tk.Entry(self.control_frame_view)
+        expense_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
+        expense_date_entry.bind("<FocusIn>", lambda event: expense_date_entry.delete(0, "end"))  # Remove text on focus
+        expense_date_entry.grid(row=1, column=1)
+
+        tk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
+        note_entry = tk.Entry(self.control_frame_view)
+        note_entry.insert(0, "ABC...") #Set initial text
+        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0,"end")) # remove text on key release
+        note_entry.grid(row=2, column=1)
+
+        tk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
+        amount_entry = tk.Entry(self.control_frame_view)
+        amount_entry.insert(0, "00.00") #set initial text
+        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end")) #remove text on focus
+        amount_entry.grid(row=3, column=1)
+
+        def submit_expense():
+            expense_date = expense_date_entry.get()
+            note = note_entry.get()
+            amount = float(amount_entry.get())
+            category = "Expense"  
+            # Call the Controller's method to handle the expense submission
+            self.Controller.add_transaction(expense_date, note, amount, category)
+            # Clear the input fields
+            expense_date_entry.delete(0, tk.END)
+            note_entry.delete(0, tk.END)
+            amount_entry.delete(0, tk.END)
+            
+            # Show a label over the Submit button
+            submit_label = tk.Label(self.control_frame_view, text="expense submitted successfully!")
+            submit_label.grid(row=5, column=1)
+
+            # Schedule a function to hide the label after 2 seconds
+            self.root.after(2000, submit_label.grid_forget)
+
+            # Clear the entry fields
+            expense_date_entry.delete(0, 'end')
+            note_entry.delete(0, 'end')
+            amount_entry.delete(0, 'end')
+            
+            self.custom_month_budget_table_frame(expense_date)
+        
+        # Create a submit button
+        submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_expense)
+        submit_button.grid(row=5)
     def create_Edit_expense_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
@@ -152,26 +352,50 @@ class BudgetApp:
 
     #row 3 frame 2
     
-    def monthly_overview(self):
-        year = self.current_month_displayed.year
-        month= self.current_month_displayed.strftime("%B")
-        try:
-            return_list = self.Controller.update_table(month,year)
-        
-        except:
-            return_list = ["Na"]
+    def monthly_overview(self, return_list):
 
-        i = 0
-        for i in return_list[i]:
-            if i == 0:
-                print(0)
-                
+        start_date = return_list[0][0]
+        end_date = return_list[-1][0]
+        
+        start_checking = return_list[0][1]
+        end_checking = return_list[-1][1]
+        
+        start_bailout = return_list[0][2]
+        end_bailout = return_list[-1][2]
+        
+        start_saving = return_list[0][3]
+        end_saving = return_list[-1][3]
+        
+        
+        
+        self.monthly_view = tk.LabelFrame(self.frame2_control, text="Monthly view")
+        self.monthly_view.grid(row=3, column=0, sticky="nsew", padx=10, pady=10) 
+        
+        tk.Label(self.monthly_view, text=start_date).grid(row=0, column=0, columnspan=2)
+        tk.Label(self.monthly_view, text=end_date).grid(row=0, column=3,columnspan=2)
+        # Align to bottom with padding
+        tk.Label(self.monthly_view, text="Accounts").grid(row=1, column=0,)
+        tk.Label(self.monthly_view, text="Starting Bal").grid(row=1, column=1,)
+        tk.Label(self.monthly_view, text="Ending Bal").grid(row=1, column=2,)
+        
+        tk.Label(self.monthly_view, text="Checking").grid(row=2, column=0,)
+        tk.Label(self.monthly_view, text=start_checking).grid(row=2, column=1,)
+        tk.Label(self.monthly_view, text=end_checking).grid(row=2, column=2,)
+        
+        tk.Label(self.monthly_view, text="Bail out").grid(row=3, column=0,)
+        tk.Label(self.monthly_view, text=start_bailout).grid(row=3, column=1,)
+        tk.Label(self.monthly_view, text=end_bailout).grid(row=3, column=2,)
+        
+        tk.Label(self.monthly_view, text="Savings").grid(row=4, column=0,)
+        tk.Label(self.monthly_view, text=start_saving).grid(row=4, column=1,)
+        tk.Label(self.monthly_view, text=end_saving).grid(row=4, column=2,)
+        
 
         
         
-        self.control_frame_view = tk.LabelFrame(self.frame2, text="Input area")
-        self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)  # Align to bottom with padding
-        tk.Label(self.control_frame_view, text="Text", width=20, height=10).grid(row=1, column=0, rowspan=4, sticky="n")
+        #self.control_frame_view = tk.LabelFrame(self.frame2_control, text="Input area")
+        #self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)  # Align to bottom with padding
+        #tk.Label(self.control_frame_view, text="Text", width=20, height=10).grid(row=1, column=0, rowspan=4, sticky="n")
         
 if __name__ == "__main__":
     window = tk.Tk()

@@ -6,12 +6,12 @@ from Refresh_db.update_checking import update_checking_account
 
 
 post_transaction = Add_Transaction()
-Update_account = update_checking_account()
+checking_account_update = update_checking_account()
 
 class Add_Income:
     @classmethod
     
-    def Add_income(cls, db_host, db_user, db_password, db_name, Income_date, note, amount, Category):
+    def Add_income(cls, db_host, db_user, db_password, db_name, Income_date, note, amount):
         # Convert start_date to a datetime object if it's a string
         if isinstance(Income_date, str):
             Income_date = datetime.strptime(Income_date, '%Y-%m-%d')
@@ -65,12 +65,12 @@ class Add_Income:
 
                 print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
 
-                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Income_date, "Checking_Account", note, amount, Category)
+                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Income_date, "Checking_Account", note, amount, "Income")
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
             
         else:
             print(f"No expense found for {Income_date}")
-        Update_account.update_Checking_account(db_host, db_user,db_password,db_name,table_name,year)
+        checking_account_update.Update_Checking_account(db_host, db_user,db_password,db_name,table_name,year)
         
         

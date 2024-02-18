@@ -87,7 +87,6 @@ class Transfer_money:
                     Too_name = "Bail_Out_AJC"
             
             
-            
             insert_query = f"""
                 INSERT INTO {table_name} (DATE,{Too_name},{From_name})
                 VALUES (%s,%s,%s)
