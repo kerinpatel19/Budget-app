@@ -3,6 +3,7 @@ from tkinter import ttk
 from datetime import datetime, timedelta
 from controller import Controller 
 from dateutil.relativedelta import relativedelta
+import calendar
 
 class BudgetApp:
     def __init__(self, root):
@@ -292,7 +293,6 @@ class BudgetApp:
             widget.destroy()
         self.control_frame_view.config(text="Expense Form", bg="#9cbce4")
 
-        
         tk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
         expense_date_entry = tk.Entry(self.control_frame_view)
         expense_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
@@ -301,31 +301,44 @@ class BudgetApp:
 
         tk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
         note_entry = tk.Entry(self.control_frame_view)
-        note_entry.insert(0, "ABC...") #Set initial text
-        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0,"end")) # remove text on key release
+        note_entry.insert(0, "ABC...")  # Set initial text
+        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0, "end"))  # Remove text on key release
         note_entry.grid(row=2, column=1)
 
         tk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
         amount_entry = tk.Entry(self.control_frame_view)
-        amount_entry.insert(0, "00.00") #set initial text
-        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end")) #remove text on focus
+        amount_entry.insert(0, "00.00")  # Set initial text
+        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end"))  # Remove text on focus
         amount_entry.grid(row=3, column=1)
+
+        recurring = tk.BooleanVar()
+        self.fixed_expense = False
+        def toggle_recurring():
+            self.fixed_expense = True
+            
+
+        tk.Label(self.control_frame_view, text="Recurring Expense:").grid(row=4, column=0)
+        toggle_button = tk.Checkbutton(self.control_frame_view, variable=recurring, command=toggle_recurring)
+        toggle_button.grid(row=4, column=1)
 
         def submit_expense():
             expense_date = expense_date_entry.get()
             note = note_entry.get()
             amount = float(amount_entry.get())
-            category = "Expense"  
-            # Call the Controller's method to handle the expense submission
-            self.Controller.add_transaction(expense_date, note, amount, category)
+            if self.fixed_expense == True:
+                category = "Fixed Expense"
+                self.Controller.add_transaction(expense_date, note, amount, category)
+            else:
+                category = "Expense"
+                self.Controller.add_transaction(expense_date, note, amount, category)
             # Clear the input fields
             expense_date_entry.delete(0, tk.END)
             note_entry.delete(0, tk.END)
             amount_entry.delete(0, tk.END)
-            
+
             # Show a label over the Submit button
-            submit_label = tk.Label(self.control_frame_view, text="expense submitted successfully!")
-            submit_label.grid(row=5, column=1)
+            submit_label = tk.Label(self.control_frame_view, text="Expense submitted successfully!")
+            submit_label.grid(row=6, column=1)
 
             # Schedule a function to hide the label after 2 seconds
             self.root.after(2000, submit_label.grid_forget)
@@ -334,21 +347,74 @@ class BudgetApp:
             expense_date_entry.delete(0, 'end')
             note_entry.delete(0, 'end')
             amount_entry.delete(0, 'end')
-            
+
             self.custom_month_budget_table_frame(expense_date)
-        
+
         # Create a submit button
         submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_expense)
         submit_button.grid(row=5)
+
+
     def create_Edit_expense_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
         self.control_frame_view.config(text="Edit expense Form", bg="#4475b8")
+        
+        year = self.current_month_displayed.year
+        month = self.current_month_displayed.month
 
-        # Create transfer input form
-        tk.Label(self.control_frame_view, text="which one" , width=20, height=10).grid(row=0, column=0)
-        # Add relevant input fields and buttons for transfer screen
+        # Get the number of days in the month
+        num_days = calendar.monthrange(year, month)[1]
+
+        # Create a list to store the dates as strings
+        dates_list = []
+
+        # Iterate through the range of days and add each date to the list
+        for day in range(1, num_days + 1):
+            date_str = f"{year}-{month:02d}-{day:02d}"
+            dates_list.append(date_str)
+    
+        look_up_date = tk.StringVar()
+        # Find the length of the longest date string in dates_list
+        longest_date_length = max([len(date) for date in dates_list])
+
+        
+        tk.Label(self.control_frame_view, text="Date :").grid(row=0, column=0)
+        from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=look_up_date, values=dates_list, width=longest_date_length)
+        from_dropdown.grid(row=0, column=1, sticky="ew")
+        print(look_up_date)
+        
+        self.return_list = []
+        def find_date():
+            
+            table_frame = tk.Frame(self.control_frame_view)
+            table_frame.grid(row=2, columnspan=4, sticky="ew")
+            
+            selected_date = look_up_date.get()
+            self.return_list = self.Controller.look_up_expense(selected_date)
+            
+            for widget in table_frame.winfo_children():
+                widget.destroy()
+        
+            if "None available" in self.return_list:
+                tk.Label(table_frame, text="None available", justify='center').grid(row=1, column=0, columnspan=4)
+                for widget in table_frame.winfo_children():
+                    widget.destroy()
+            else:
+                labels = ["Date", "Account", "Note", "Amount", "Category"]
+                for col, label in enumerate(labels):
+                    tk.Label(table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=1, column=col, sticky="ewns")
+
+                data = self.return_list
+
+                for row, entry_data in enumerate(data, start=3):
+                    for col, value in enumerate(entry_data):
+                        entry = tk.Label(table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                        entry.grid(row=row, column=col, sticky="ewns")
+        tk.Button(self.control_frame_view, text="Look up", command=find_date).grid(row=0,column=3)
+        
+        
 
     #row 3 frame 2
     

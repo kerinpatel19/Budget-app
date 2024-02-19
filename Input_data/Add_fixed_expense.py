@@ -6,7 +6,7 @@ from Refresh_db.update_checking import update_checking_account
 
 
 post_transaction = Add_Transaction()
-Update_account = update_checking_account()
+checking_account_update = update_checking_account()
 
 class Add_fixed_expense:
     @classmethod
@@ -92,7 +92,7 @@ class Add_fixed_expense:
             current_date = new_date
         
         
-        Update_account.update_Checking_account(db_host, db_user,db_password,db_name,table_name,year)
+        checking_account_update.Update_Checking_account(db_host, db_user,db_password,db_name,table_name,year)
         # Commit the changes and close the connection
         db_connection.commit()
         cursor.close()

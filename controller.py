@@ -1,16 +1,20 @@
 from datetime import datetime, timedelta
 from Output_data import view_monthly_budget
+from Output_data import view_expense_by_date
 from Input_data.Add_income import Add_Income
 from Input_data.Add_expense import Add_Expense
 from Input_data.Create_transfer import Transfer_money
+from Input_data.Add_fixed_expense import Add_fixed_expense
 
 class Controller:
     
     def __init__(self):
         self.view_budget = view_monthly_budget.view_budget()  # Instantiate the view_budget class
+        self.find_expense_by_date = view_expense_by_date.view_Expense()
         self.add_income = Add_Income()
         self.add_expense = Add_Expense()
         self.Transfer = Transfer_money()
+        self.add_fixed_expense = Add_fixed_expense()
         
     def db_connecter(self):
         db_host = None
@@ -63,6 +67,8 @@ class Controller:
             self.add_income.Add_income(db_host, db_user, db_password, db_name, new_date, note, amount)
         elif category == "Expense":
             self.add_expense.Add_expense(db_host, db_user, db_password, db_name, new_date, note, amount) 
+        elif category == "Fixed Expense":
+            self.add_fixed_expense.Add_Fixed_expense(db_host, db_user, db_password, db_name, date, note, amount)
         else:
             return ("fail")
     def Create_transfer(self,From_account, To_account, Transfer_date, note, amount):
@@ -84,7 +90,11 @@ class Controller:
         
         
         self.Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount)
-        
+            
+    def look_up_expense(self,look_up_date):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        return_list = self.find_expense_by_date.view_expense(db_host, db_user, db_password, db_name, look_up_date)
+        return return_list
         
         
 #source venv/bin/activate
