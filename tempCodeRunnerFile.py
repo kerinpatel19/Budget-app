@@ -1,1 +1,1 @@
-class BudgetApp:
+'solid'

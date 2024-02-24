@@ -28,17 +28,17 @@ class BudgetApp:
         
     def create_all_frames(self):
         
-        self.budget_table_frame = tk.LabelFrame(self.root, text="Budget Table")
+        self.budget_table_frame = ttk.LabelFrame(self.root, text="Budget Table")
         self.budget_table_frame.grid(row=0, column=0, sticky="w",)
         
-        self.frame2_control = tk.Frame(self.root)
+        self.frame2_control = ttk.Frame(self.root)
         self.frame2_control.grid(row=0, column=1, rowspan=4, columnspan= 2, sticky="nsew")
         
-        self.control_frame = tk.LabelFrame(self.frame2_control, text="Budget Controls")
+        self.control_frame = ttk.LabelFrame(self.frame2_control, text="Budget Controls")
         self.control_frame.grid(row=1, column=0)
         
         
-        self.control_frame_view = tk.LabelFrame(self.frame2_control, text="Input area")
+        self.control_frame_view = ttk.LabelFrame(self.frame2_control, text="Input area")
         self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
         
     
@@ -59,13 +59,13 @@ class BudgetApp:
                 "transfer out", "transfer In",
                 "income", "expense"]
         for col, label in enumerate(labels):
-            tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
+            ttk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
         data = return_list
 
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
-                entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                entry = ttk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief='solid', borderwidth=2)
                 entry.grid(row=row, column=col)   
         self.monthly_overview(return_list)
         
@@ -82,14 +82,14 @@ class BudgetApp:
                 "transfer out", "transfer In",
                 "income", "expense"]
         for col, label in enumerate(labels):
-            tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
+            ttk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
         data = return_list
         self.monthly_overview(return_list)
 
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
-                entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                entry = ttk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief='solid', borderwidth=2)
                 entry.grid(row=row, column=col)
     def next_month_budget_table_frame(self):
         self.clear_budget_screen()
@@ -103,14 +103,14 @@ class BudgetApp:
                 "transfer out", "transfer In",
                 "income", "expense"]
         for col, label in enumerate(labels):
-            tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
+            ttk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
         data = return_list
         self.monthly_overview(return_list)
         
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
-                entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                entry = ttk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
                 entry.grid(row=row, column=col)
                 
     def custom_month_budget_table_frame(self, date):
@@ -125,53 +125,53 @@ class BudgetApp:
                 "transfer out", "transfer In",
                 "income", "expense"]
         for col, label in enumerate(labels):
-            tk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
+            ttk.Label(self.budget_table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=2, column=col)
 
         data = return_list
 
         for row, entry_data in enumerate(data, start=3):
             for col, value in enumerate(entry_data):
-                entry = tk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                entry = ttk.Label(self.budget_table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
                 entry.grid(row=row, column=col)   
         self.monthly_overview(return_list)
     def create_control_buttons_frame(self):
 
-        tk.Button(self.control_frame, text="Transfer", width=5, height=4, command= self.create_transfer_screen).grid(row=0, column=0, columnspan=1, rowspan=1, sticky="ew")
-        tk.Button(self.control_frame, text="Add Income", width=5, height=4, command= self.create_income_screen).grid(row=0, column=1, columnspan=1, rowspan=1, sticky="ew")
-        tk.Button(self.control_frame, text="Expense", width=5, height=4, command=self.create_expense_screen).grid(row=0, column=2, columnspan=1, rowspan=1, sticky="ew")
-        tk.Button(self.control_frame, text="Edit Expense", width=5, height=4, command=self.create_Edit_expense_screen).grid(row=0, column=3, columnspan=1, rowspan=1, sticky="ew")
+        ttk.Button(self.control_frame, text="Transfer", width=5, padding=4, command= self.create_transfer_screen).grid(row=0, column=0, columnspan=1, rowspan=1, sticky="ew")
+        ttk.Button(self.control_frame, text="Add Income", width=5, padding=4, command= self.create_income_screen).grid(row=0, column=1, columnspan=1, rowspan=1, sticky="ew")
+        ttk.Button(self.control_frame, text="Expense", width=5, padding=4, command=self.create_expense_screen).grid(row=0, column=2, columnspan=1, rowspan=1, sticky="ew")
+        ttk.Button(self.control_frame, text="Edit Expense", width=5, padding=4, command=self.create_Edit_expense_screen).grid(row=0, column=3, columnspan=1, rowspan=1, sticky="ew")
         
-        tk.Button(self.control_frame, text="last month", height=2, command=self.last_month_budget_table_frame).grid(row=2, column=0, columnspan=1, rowspan=1, sticky="wen")
-        tk.Button(self.control_frame, text="Current month", height=2, command=self.current_month_budget_table_frame).grid(row=2, column=1, columnspan=2, rowspan=1, sticky="ew")
-        tk.Button(self.control_frame, text="Next month", height=2, command=self.next_month_budget_table_frame).grid(row=2,column=3, columnspan=1, rowspan=1, sticky="wen")
+        ttk.Button(self.control_frame, text="last month", padding=4, command=self.last_month_budget_table_frame).grid(row=2, column=0, columnspan=1, rowspan=1, sticky="wen")
+        ttk.Button(self.control_frame, text="Current month", padding=4, command=self.current_month_budget_table_frame).grid(row=2, column=1, columnspan=2, rowspan=1, sticky="ew")
+        ttk.Button(self.control_frame, text="Next month", padding=4, command=self.next_month_budget_table_frame).grid(row=2,column=3, columnspan=1, rowspan=1, sticky="wen")
   
-        tk.Button(self.control_frame, text="scan statement", height=1, command=self.last_month_budget_table_frame).grid(row=3, column=0, columnspan=1, rowspan=1, sticky="ewn")
-        tk.Button(self.control_frame, text="Add more year", height=1, command=self.current_month_budget_table_frame).grid(row=3, column=1, columnspan=1, rowspan=1, sticky="ew")
-        tk.Button(self.control_frame, text="Add Category", height=1, command=self.next_month_budget_table_frame).grid(row=3,column=2, columnspan=1, rowspan=1, sticky="ewn")
-        tk.Button(self.control_frame, text="More", height=1, command=self.next_month_budget_table_frame).grid(row=3,column=3, columnspan=1, rowspan=1, sticky="ewn")
+        ttk.Button(self.control_frame, text="scan statement", padding=4, command=self.last_month_budget_table_frame).grid(row=3, column=0, columnspan=1, rowspan=1, sticky="ewn")
+        ttk.Button(self.control_frame, text="Add more year", padding=4, command=self.current_month_budget_table_frame).grid(row=3, column=1, columnspan=1, rowspan=1, sticky="ew")
+        ttk.Button(self.control_frame, text="Add Category", padding=4, command=self.next_month_budget_table_frame).grid(row=3,column=2, columnspan=1, rowspan=1, sticky="ewn")
+        ttk.Button(self.control_frame, text="More", padding=4, command=self.next_month_budget_table_frame).grid(row=3,column=3, columnspan=1, rowspan=1, sticky="ewn")
   
     def get_sub_category_list(self):
         return_list = self.Controller.sub_category()
         return return_list
     #row 2   frame 2  
     def default_input_area_screen(self):  # Align to bottom with padding
-        tk.Label(self.control_frame_view, text="Text", width=20, height=10).grid(row=1, column=0, rowspan=4, sticky="n")
+        ttk.Label(self.control_frame_view, text="Text", width=20, padding=10).grid(row=1, column=0, rowspan=4, sticky="n")
     def create_transfer_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
-        self.control_frame_view.config(text="transfer Form", bg="#9cbce4")
 
-        
+        self.control_frame_view.config(text="Transfer Form")
+
         # Create "From Account" and "To Account" dropdowns
-        self.from_account = tk.StringVar()
-        self.to_account = tk.StringVar()
+        self.from_account = ttk.StringVar()
+        self.to_account = ttk.StringVar()
 
-        tk.Label(self.control_frame_view, text="From Account:").grid(row=0, column=0)
+        ttk.Label(self.control_frame_view, text="From Account:").grid(row=0, column=0)
         from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.from_account, values=self.accounts)
         from_dropdown.grid(row=0, column=1)
 
-        tk.Label(self.control_frame_view, text="To Account:").grid(row=1, column=0)
+        ttk.Label(self.control_frame_view, text="To Account:").grid(row=1, column=0)
         to_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.to_account, values=self.accounts)
         to_dropdown.grid(row=1, column=1)
 
@@ -181,23 +181,23 @@ class BudgetApp:
             to_dropdown['values'] = new_accounts
 
         self.from_account.trace("w", update_to_options)
-                
-        tk.Label(self.control_frame_view, text="Date: ").grid(row=2, column=0)
-        transfer_date_entry = tk.Entry(self.control_frame_view)
+
+        ttk.Label(self.control_frame_view, text="Date: ").grid(row=2, column=0)
+        transfer_date_entry = ttk.Entry(self.control_frame_view)
         transfer_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
         transfer_date_entry.bind("<FocusIn>", lambda event: transfer_date_entry.delete(0, "end"))  # Remove text on focus
         transfer_date_entry.grid(row=2, column=1)
 
-        tk.Label(self.control_frame_view, text="Note:").grid(row=3, column=0)
-        note_entry = tk.Entry(self.control_frame_view)
-        note_entry.insert(0, "ABC...") #Set initial text
-        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0,"end")) # remove text on key release
+        ttk.Label(self.control_frame_view, text="Note:").grid(row=3, column=0)
+        note_entry = ttk.Entry(self.control_frame_view)
+        note_entry.insert(0, "ABC...")  # Set initial text
+        note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0, "end"))  # Remove text on key release
         note_entry.grid(row=3, column=1)
 
-        tk.Label(self.control_frame_view, text="Amount:").grid(row=4, column=0)
-        amount_entry = tk.Entry(self.control_frame_view)
-        amount_entry.insert(0, "00.00") #set initial text
-        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end")) #remove text on focus
+        ttk.Label(self.control_frame_view, text="Amount:").grid(row=4, column=0)
+        amount_entry = ttk.Entry(self.control_frame_view)
+        amount_entry.insert(0, "00.00")  # Set initial text
+        amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end"))  # Remove text on focus
         amount_entry.grid(row=4, column=1)
 
         def submit_transfer():
@@ -206,19 +206,19 @@ class BudgetApp:
             transfer_date = transfer_date_entry.get()
             note = note_entry.get()
             amount = float(amount_entry.get())
-            category = "transfer"  
+            category = "transfer"
             # Call the Controller's method to handle the transfer submission
             self.Controller.Create_transfer(from_account, to_account, transfer_date, note, amount)
 
             # Clear the input fields
             from_dropdown.set('')
             to_dropdown.set('')
-            transfer_date_entry.delete(0, tk.END)
-            note_entry.delete(0, tk.END)
-            amount_entry.delete(0, tk.END)
-            
+            transfer_date_entry.delete(0, ttk.END)
+            note_entry.delete(0, ttk.END)
+            amount_entry.delete(0, ttk.END)
+
             # Show a label over the Submit button
-            submit_label = tk.Label(self.control_frame_view, text="transfer submitted successfully!")
+            submit_label = ttk.Label(self.control_frame_view, text="Transfer submitted successfully!")
             submit_label.grid(row=5, column=1)
 
             # Schedule a function to hide the label after 2 seconds
@@ -228,12 +228,13 @@ class BudgetApp:
             transfer_date_entry.delete(0, 'end')
             note_entry.delete(0, 'end')
             amount_entry.delete(0, 'end')
-            
+
             self.custom_month_budget_table_frame(transfer_date)
-        
+
         # Create a submit button
-        submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_transfer)
+        submit_button = ttk.Button(self.control_frame_view, text="Submit", command=submit_transfer)
         submit_button.grid(row=5)
+
         
     def create_income_screen(self):
         # Clear existing content of control_frame_view
@@ -242,20 +243,20 @@ class BudgetApp:
         self.control_frame_view.config(text="Income Form", bg="#9cbce4")
 
         
-        tk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
-        income_date_entry = tk.Entry(self.control_frame_view)
+        ttk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
+        income_date_entry = ttk.Entry(self.control_frame_view)
         income_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
         income_date_entry.bind("<FocusIn>", lambda event: income_date_entry.delete(0, "end"))  # Remove text on focus
         income_date_entry.grid(row=1, column=1)
 
-        tk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
-        note_entry = tk.Entry(self.control_frame_view)
+        ttk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
+        note_entry = ttk.Entry(self.control_frame_view)
         note_entry.insert(0, "ABC...") #Set initial text
         note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0,"end")) # remove text on key release
         note_entry.grid(row=2, column=1)
 
-        tk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
-        amount_entry = tk.Entry(self.control_frame_view)
+        ttk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
+        amount_entry = ttk.Entry(self.control_frame_view)
         amount_entry.insert(0, "00.00") #set initial text
         amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end")) #remove text on focus
         amount_entry.grid(row=3, column=1)
@@ -263,12 +264,12 @@ class BudgetApp:
         categories = self.get_sub_category_list()
         
         categories = [category for category in categories if category not in ['Expense', 'Transfer','Out Transfer','Fixed Expense','Going out','School','Food','Taxes','Other']]
-        self.sub_category = tk.StringVar()
+        self.sub_category = ttk.StringVar()
         
         # Find the length of the longest date string in dates_list
         longest_category_length = max([len(category) for category in categories])
         
-        tk.Label(self.control_frame_view, text="Select Category :-").grid(row=4, column=0)
+        ttk.Label(self.control_frame_view, text="Select Category :-").grid(row=4, column=0)
         from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.sub_category, values=categories, width=longest_category_length)
         from_dropdown.grid(row=4, column=1, sticky="ew")
         
@@ -280,12 +281,12 @@ class BudgetApp:
             # Call the Controller's method to handle the income submission
             self.Controller.add_transaction(income_date, note, amount, category)
             # Clear the input fields
-            income_date_entry.delete(0, tk.END)
-            note_entry.delete(0, tk.END)
-            amount_entry.delete(0, tk.END)
+            income_date_entry.delete(0, ttk.END)
+            note_entry.delete(0, ttk.END)
+            amount_entry.delete(0, ttk.END)
             
             # Show a label over the Submit button
-            submit_label = tk.Label(self.control_frame_view, text="Income submitted successfully!")
+            submit_label = ttk.Label(self.control_frame_view, text="Income submitted successfully!")
             submit_label.grid(row=5, column=1)
 
             # Schedule a function to hide the label after 2 seconds
@@ -299,7 +300,7 @@ class BudgetApp:
             self.custom_month_budget_table_frame(income_date)
         
         # Create a submit button
-        submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_income)
+        submit_button = ttk.Button(self.control_frame_view, text="Submit", command=submit_income)
         submit_button.grid(row=5)
         
         
@@ -311,20 +312,20 @@ class BudgetApp:
             widget.destroy()
         self.control_frame_view.config(text="Expense Form", bg="#9cbce4")
 
-        tk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
-        expense_date_entry = tk.Entry(self.control_frame_view)
+        ttk.Label(self.control_frame_view, text="Date: ").grid(row=1, column=0)
+        expense_date_entry = ttk.Entry(self.control_frame_view)
         expense_date_entry.insert(0, "YYYY-MM-DD")  # Set initial text
         expense_date_entry.bind("<FocusIn>", lambda event: expense_date_entry.delete(0, "end"))  # Remove text on focus
         expense_date_entry.grid(row=1, column=1)
 
-        tk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
-        note_entry = tk.Entry(self.control_frame_view)
+        ttk.Label(self.control_frame_view, text="Note:").grid(row=2, column=0)
+        note_entry = ttk.Entry(self.control_frame_view)
         note_entry.insert(0, "ABC...")  # Set initial text
         note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0, "end"))  # Remove text on key release
         note_entry.grid(row=2, column=1)
 
-        tk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
-        amount_entry = tk.Entry(self.control_frame_view)
+        ttk.Label(self.control_frame_view, text="Amount:").grid(row=3, column=0)
+        amount_entry = ttk.Entry(self.control_frame_view)
         amount_entry.insert(0, "00.00")  # Set initial text
         amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end"))  # Remove text on focus
         amount_entry.grid(row=3, column=1)
@@ -333,13 +334,13 @@ class BudgetApp:
         
         categories = [category for category in categories if category not in ['Income', 'Expense', 'Transfer','Tax Refund','Refund']]
     
-        recurring = tk.BooleanVar()
-        self.sub_category = tk.StringVar()
+        recurring = ttk.BooleanVar()
+        self.sub_category = ttk.StringVar()
         
         # Find the length of the longest date string in dates_list
         longest_category_length = max([len(category) for category in categories])
         
-        tk.Label(self.control_frame_view, text="Select Category :-").grid(row=4, column=0)
+        ttk.Label(self.control_frame_view, text="Select Category :-").grid(row=4, column=0)
         from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.sub_category, values=categories, width=longest_category_length)
         from_dropdown.grid(row=4, column=1, sticky="ew")
         
@@ -348,8 +349,8 @@ class BudgetApp:
             self.fixed_expense = True
             
 
-        tk.Label(self.control_frame_view, text="Recurring Expense:").grid(row=5, column=0)
-        toggle_button = tk.Checkbutton(self.control_frame_view, variable=recurring, command=toggle_recurring)
+        ttk.Label(self.control_frame_view, text="Recurring Expense:").grid(row=5, column=0)
+        toggle_button = ttk.Checkbutton(self.control_frame_view, variable=recurring, command=toggle_recurring)
         toggle_button.grid(row=5, column=1)
 
         def submit_expense():
@@ -364,12 +365,12 @@ class BudgetApp:
                 category = "Expense"
                 self.Controller.add_transaction(expense_date, note, amount, category)
             # Clear the input fields
-            expense_date_entry.delete(0, tk.END)
-            note_entry.delete(0, tk.END)
-            amount_entry.delete(0, tk.END)
+            expense_date_entry.delete(0, ttk.END)
+            note_entry.delete(0, ttk.END)
+            amount_entry.delete(0, ttk.END)
 
             # Show a label over the Submit button
-            submit_label = tk.Label(self.control_frame_view, text="Expense submitted successfully!")
+            submit_label = ttk.Label(self.control_frame_view, text="Expense submitted successfully!")
             submit_label.grid(row=6, column=1)
 
             # Schedule a function to hide the label after 2 seconds
@@ -383,7 +384,7 @@ class BudgetApp:
             self.custom_month_budget_table_frame(expense_date)
 
         # Create a submit button
-        submit_button = tk.Button(self.control_frame_view, text="Submit", command=submit_expense)
+        submit_button = ttk.Button(self.control_frame_view, text="Submit", command=submit_expense)
         submit_button.grid(row=6)
 
 
@@ -391,7 +392,7 @@ class BudgetApp:
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
-        self.control_frame_view.config(text="Edit expense Form", bg="#4475b8")
+        self.control_frame_view.config(text="Edit expense Form", background="#4475b8")
         
         year = self.current_month_displayed.year
         month = self.current_month_displayed.month
@@ -412,7 +413,7 @@ class BudgetApp:
         longest_date_length = max([len(date) for date in dates_list])
 
         
-        tk.Label(self.control_frame_view, text="Date :").grid(row=0, column=0)
+        ttk.Label(self.control_frame_view, text="Date :").grid(row=0, column=0)
         from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=look_up_date, values=dates_list, width=longest_date_length)
         from_dropdown.grid(row=0, column=1, sticky="ew")
         print(look_up_date)
@@ -420,7 +421,7 @@ class BudgetApp:
         self.return_list = []
         def find_date():
             
-            table_frame = tk.Frame(self.control_frame_view)
+            table_frame = ttk.Frame(self.control_frame_view)
             table_frame.grid(row=2, columnspan=4, sticky="ew")
             
             selected_date = look_up_date.get()
@@ -436,15 +437,15 @@ class BudgetApp:
             else:
                 labels = ["Date", "Account", "Note", "Amount", "Category"]
                 for col, label in enumerate(labels):
-                    tk.Label(table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=1, column=col, sticky="ewns")
+                    ttk.Label(table_frame, text=label, relief=tk.SOLID, borderwidth=2).grid(row=1, column=col, sticky="ewns")
 
                 data = self.return_list
 
                 for row, entry_data in enumerate(data, start=3):
                     for col, value in enumerate(entry_data):
-                        entry = tk.Label(table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
+                        entry = ttk.Label(table_frame, text=value, width=10, justify='center', relief=tk.SOLID, borderwidth=2)
                         entry.grid(row=row, column=col, sticky="ewns")
-        tk.Button(self.control_frame_view, text="Look up", command=find_date).grid(row=0,column=3)
+        ttk.Button(self.control_frame_view, text="Look up", command=find_date).grid(row=0,column=3)
         
         
 
@@ -466,34 +467,34 @@ class BudgetApp:
         
         
         
-        self.monthly_view = tk.LabelFrame(self.frame2_control, text="Monthly view")
+        self.monthly_view = ttk.LabelFrame(self.frame2_control, text="Monthly view")
         self.monthly_view.grid(row=3, column=0, sticky="nsew", padx=10, pady=10) 
         
-        tk.Label(self.monthly_view, text=start_date).grid(row=0, column=0)
-        tk.Label(self.monthly_view, text=end_date).grid(row=0, column=3)
+        ttk.Label(self.monthly_view, text=start_date).grid(row=0, column=0)
+        ttk.Label(self.monthly_view, text=end_date).grid(row=0, column=3)
         # Align to bottom with padding
-        tk.Label(self.monthly_view, text="Accounts").grid(row=1, column=0,)
-        tk.Label(self.monthly_view, text="Starting Bal").grid(row=1, column=1,)
-        tk.Label(self.monthly_view, text="Ending Bal").grid(row=1, column=3,)
+        ttk.Label(self.monthly_view, text="Accounts").grid(row=1, column=0,)
+        ttk.Label(self.monthly_view, text="Starting Bal").grid(row=1, column=1,)
+        ttk.Label(self.monthly_view, text="Ending Bal").grid(row=1, column=3,)
         
-        tk.Label(self.monthly_view, text="Checking").grid(row=2, column=0,)
-        tk.Label(self.monthly_view, text=start_checking).grid(row=2, column=1,)
-        tk.Label(self.monthly_view, text=end_checking).grid(row=2, column=3,)
+        ttk.Label(self.monthly_view, text="Checking").grid(row=2, column=0,)
+        ttk.Label(self.monthly_view, text=start_checking).grid(row=2, column=1,)
+        ttk.Label(self.monthly_view, text=end_checking).grid(row=2, column=3,)
         
-        tk.Label(self.monthly_view, text="Bail out").grid(row=3, column=0,)
-        tk.Label(self.monthly_view, text=start_bailout).grid(row=3, column=1,)
-        tk.Label(self.monthly_view, text=end_bailout).grid(row=3, column=3,)
+        ttk.Label(self.monthly_view, text="Bail out").grid(row=3, column=0,)
+        ttk.Label(self.monthly_view, text=start_bailout).grid(row=3, column=1,)
+        ttk.Label(self.monthly_view, text=end_bailout).grid(row=3, column=3,)
         
-        tk.Label(self.monthly_view, text="Savings").grid(row=4, column=0,)
-        tk.Label(self.monthly_view, text=start_saving).grid(row=4, column=1,)
-        tk.Label(self.monthly_view, text=end_saving).grid(row=4, column=3,)
+        ttk.Label(self.monthly_view, text="Savings").grid(row=4, column=0,)
+        ttk.Label(self.monthly_view, text=start_saving).grid(row=4, column=1,)
+        ttk.Label(self.monthly_view, text=end_saving).grid(row=4, column=3,)
         
 
         
         
         #self.control_frame_view = tk.LabelFrame(self.frame2_control, text="Input area")
         #self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)  # Align to bottom with padding
-        #tk.Label(self.control_frame_view, text="Text", width=20, height=10).grid(row=1, column=0, rowspan=4, sticky="n")
+        #tk.Label(self.control_frame_view, text="Text", width=20, padding=10).grid(row=1, column=0, rowspan=4, sticky="n")
         
 if __name__ == "__main__":
     window = tk.Tk()
