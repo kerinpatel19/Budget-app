@@ -1,12 +1,10 @@
 import mysql.connector
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from Ledger.Post_transaction import Add_Transaction
 from Refresh_db.update_checking import update_checking_account
 from Refresh_db.update_saveings import Update_saveings_account
 from Refresh_db.update_bailout import Update_bailout_account
 
-post_transaction = Add_Transaction()
 checking_account_update = update_checking_account()
 saveing_account_update = Update_saveings_account()
 bailout_account_update = Update_bailout_account()

@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from datetime import datetime, timedelta
-from controller import Controller 
+from controller import Controller
 from dateutil.relativedelta import relativedelta
 import calendar
 
@@ -14,6 +14,10 @@ class BudgetApp:
         self.root.config(background="#ffffff")
         self.current = datetime.now()
         self.accounts = ["Checking", "Bail out", "saving"]
+        self.style = ttk.Style()
+        self.style.configure('Custom.TFrame', background='#FF0000')
+
+
 
         self.create_all_frames()
         self.create_control_buttons_frame()
@@ -28,17 +32,17 @@ class BudgetApp:
         
     def create_all_frames(self):
         
-        self.budget_table_frame = ttk.LabelFrame(self.root, text="Budget Table")
+        self.budget_table_frame = ttk.LabelFrame(self.root, text="Budget Table", style='Custom.TFrame')
         self.budget_table_frame.grid(row=0, column=0, sticky="w",)
         
-        self.frame2_control = ttk.Frame(self.root)
+        self.frame2_control = ttk.Frame(self.root, style='Custom.TFrame')
         self.frame2_control.grid(row=0, column=1, rowspan=4, columnspan= 2, sticky="nsew")
         
-        self.control_frame = ttk.LabelFrame(self.frame2_control, text="Budget Controls")
+        self.control_frame = ttk.LabelFrame(self.frame2_control, text="Budget Controls", style='Custom.TFrame')
         self.control_frame.grid(row=1, column=0)
         
         
-        self.control_frame_view = ttk.LabelFrame(self.frame2_control, text="Input area")
+        self.control_frame_view = ttk.LabelFrame(self.frame2_control, text="Input area", style='Custom.TFrame')
         self.control_frame_view.grid(row=2, column=0, sticky="nsew", padx=10, pady=10)
         
     
@@ -155,32 +159,49 @@ class BudgetApp:
         return return_list
     #row 2   frame 2  
     def default_input_area_screen(self):  # Align to bottom with padding
-        ttk.Label(self.control_frame_view, text="Text", width=20, padding=10).grid(row=1, column=0, rowspan=4, sticky="n")
+        ttk.Label(self.control_frame_view, text="Text", width=20, padding=10, background="lightblue").grid(row=1, column=0, rowspan=4, sticky="n")
     def create_transfer_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
 
-        self.control_frame_view.config(text="Transfer Form")
+            # Create a new style for the LabelFrame
+        style = ttk.Style()
+        style.configure("Custom.TLabelframe", background='#FF0000')
 
-        # Create "From Account" and "To Account" dropdowns
-        self.from_account = ttk.StringVar()
-        self.to_account = ttk.StringVar()
+        # Configure the LabelFrame with the custom style
+        self.control_frame_view.config(text="Transfer Form", style=style)
+
+        def reset_list():
+            self.accounts.clear()
+            self.accounts = ["Checking", "Bail out", "saving"]
+            combo_a['values'] = self.accounts
+            combo_b['values'] = self.accounts
+        
+        def update_to_options(event):
+            combo_box_a = combo_a.get()
+            combo_box_b = combo_b.get()
+            if combo_box_a is not None:
+                self.accounts.remove(combo_box_a)
+                combo_b.set("")  # Clear the current selection
+                combo_b['values'] = self.accounts
+            else:
+                self.accounts.remove(combo_box_b)
+                combo_a.set("")  # Clear the current selection
+                combo_a['values'] = self.accounts
 
         ttk.Label(self.control_frame_view, text="From Account:").grid(row=0, column=0)
-        from_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.from_account, values=self.accounts)
-        from_dropdown.grid(row=0, column=1)
+        combo_a = ttk.Combobox(self.control_frame_view, values=self.accounts)
+        combo_a.grid(row=0, column=1)
+        combo_a.bind("<<ComboboxSelected>>", update_to_options)
+
 
         ttk.Label(self.control_frame_view, text="To Account:").grid(row=1, column=0)
-        to_dropdown = ttk.Combobox(self.control_frame_view, textvariable=self.to_account, values=self.accounts)
-        to_dropdown.grid(row=1, column=1)
+        combo_b = ttk.Combobox(self.control_frame_view, values=self.accounts)
+        combo_b.grid(row=1, column=1)
+        combo_b.bind("<<ComboboxSelected>>", update_to_options)
 
-        def update_to_options(*args):
-            selected_from = self.from_account.get()
-            new_accounts = [account for account in self.accounts if account != selected_from]
-            to_dropdown['values'] = new_accounts
 
-        self.from_account.trace("w", update_to_options)
 
         ttk.Label(self.control_frame_view, text="Date: ").grid(row=2, column=0)
         transfer_date_entry = ttk.Entry(self.control_frame_view)
@@ -199,10 +220,9 @@ class BudgetApp:
         amount_entry.insert(0, "00.00")  # Set initial text
         amount_entry.bind("<FocusIn>", lambda event: amount_entry.delete(0, "end"))  # Remove text on focus
         amount_entry.grid(row=4, column=1)
-
         def submit_transfer():
-            from_account = self.from_account.get()
-            to_account = self.to_account.get()
+            from_account = combo_a.get()
+            to_account = combo_b.get()
             transfer_date = transfer_date_entry.get()
             note = note_entry.get()
             amount = float(amount_entry.get())
@@ -210,13 +230,7 @@ class BudgetApp:
             # Call the Controller's method to handle the transfer submission
             self.Controller.Create_transfer(from_account, to_account, transfer_date, note, amount)
 
-            # Clear the input fields
-            from_dropdown.set('')
-            to_dropdown.set('')
-            transfer_date_entry.delete(0, ttk.END)
-            note_entry.delete(0, ttk.END)
-            amount_entry.delete(0, ttk.END)
-
+            
             # Show a label over the Submit button
             submit_label = ttk.Label(self.control_frame_view, text="Transfer submitted successfully!")
             submit_label.grid(row=5, column=1)
@@ -224,12 +238,18 @@ class BudgetApp:
             # Schedule a function to hide the label after 2 seconds
             self.root.after(2000, submit_label.grid_forget)
 
-            # Clear the entry fields
-            transfer_date_entry.delete(0, 'end')
-            note_entry.delete(0, 'end')
-            amount_entry.delete(0, 'end')
-
             self.custom_month_budget_table_frame(transfer_date)
+            reset_list()
+            
+            # Clear the input fields
+            combo_a.set("")  # Clear the current selection
+            combo_b.set("")
+            transfer_date_entry.delete(0,tk.END)
+            transfer_date_entry.insert(0,"YYYY-MM-DD")
+            note_entry.delete(0, tk.END)
+            note_entry.insert(0, "ABC...")
+            amount_entry.delete(0, tk.END)
+            amount_entry.insert(0, "00.00")
 
         # Create a submit button
         submit_button = ttk.Button(self.control_frame_view, text="Submit", command=submit_transfer)
@@ -264,7 +284,6 @@ class BudgetApp:
         categories = self.get_sub_category_list()
         
         categories = [category for category in categories if category not in ['Expense', 'Transfer','Out Transfer','Fixed Expense','Going out','School','Food','Taxes','Other']]
-        self.sub_category = ttk.StringVar()
         
         # Find the length of the longest date string in dates_list
         longest_category_length = max([len(category) for category in categories])
@@ -501,4 +520,4 @@ if __name__ == "__main__":
     app = BudgetApp(window)
     window.mainloop()
     
-#source venv/bin/activate
+#source myenv/bin/activate
