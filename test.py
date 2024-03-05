@@ -1,18 +1,9 @@
-from Output_data.get_sub_category import Get_sub_category
+import matplotlib.pyplot as plt
 
-Get_Sub_category = Get_sub_category()
+labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
+sizes = [15, 30, 45, 10]
+explode = (0, 0.0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
 
-db_host = 'localhost'
-db_user = 'root'
-db_password = 'Panna4120@'
-db_name = "test"
-From_account = "Checking_Account"
-To_account = 'Savings'
-start_date = "2023-02-21"
-note = "test"
-amount = 100.00
-
-return_list = Get_Sub_category.Get_Sub_Category(db_host, db_user, db_password, db_name)
-
-print(return_list)
-        
+fig, ax = plt.subplots()
+ax.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+        shadow=True, startangle=90)
