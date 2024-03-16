@@ -5,7 +5,7 @@ from datetime import datetime
 
 class line_extract:
     @classmethod
-    def extract_lines(file_path):
+    def extract_lines(cls,file_path):
         user_home = os.path.expanduser("~")
 
         # Extract text from the entire PDF
@@ -65,7 +65,7 @@ class line_extract:
                     line = lines[i]
                     if x == 2:
                         # Get the note
-                        transaction_note = line
+                        transaction_note = line.replace("  ", "")
                     elif x == 4:
                         # Extract the amount from the line (allowing for amounts greater than 1,000)
                         amount_match = re.search(r"[+-]?\d{1,3}(,\d{3})*\.\d{2}", line)
@@ -85,4 +85,4 @@ class line_extract:
             
 
 
-#source venv/bin/activate
+#source myenv/bin/activate

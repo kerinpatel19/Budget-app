@@ -23,7 +23,7 @@ class Controller:
         db_user = None
         db_password = None
         db_name = None
-        file_path = "/Users/kerinpatel/Desktop/Budget app/config.ingore/database_key.txt"
+        file_path = "/Users/kerinpatel/Desktop/Budget app/config.gitingore/database_key.txt"
         try:
             with open(file_path, 'r') as file:
                 lines = file.readlines()
