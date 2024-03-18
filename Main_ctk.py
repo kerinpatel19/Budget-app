@@ -13,10 +13,10 @@ class Driver(ctk.CTk):
         super().__init__()
         self.title(title)
         self.geometry(size)
-        self.control_frame_R = Control_frame_R(self)   
+        self.main_frame = Main_frame(self)   
         
         #place them on the screen 
-        self.control_frame_R.pack( fill='both', expand=True)
+        self.main_frame.pack( fill='both', expand=True)
         self.current = datetime.now()
         self.current_month_displayed = self.current
         #self.mainloop()
@@ -26,7 +26,7 @@ class Driver(ctk.CTk):
         
 
     
-class Control_frame_R(ctk.CTkFrame):
+class Main_frame(ctk.CTkFrame):
     
         
     
@@ -43,25 +43,25 @@ class Control_frame_R(ctk.CTkFrame):
         self.budget_table_frame = ctk.CTkFrame(self, fg_color="black")
         self.budget_table_frame.pack(side="left")
         
-        self.Controls_frame = ctk.CTkFrame(self, fg_color="black")
+        self.Controls_frame = ctk.CTkFrame(self, fg_color="white")
         self.Controls_frame.pack(side="right", expand=True,fill="both")
         
         self.Create_all_frames()
         
     
     def Create_all_frames(self):
-
-        self.control_frame = ctk.CTkFrame(self.Controls_frame,border_width = 1, border_color="Black", fg_color="#cadeef")
-        self.control_frame.grid(row=0, column=1, sticky="nsew")
         
         self.monthly_view = ctk.CTkFrame(self.Controls_frame,  border_width = 1, border_color="Black", fg_color="#71ace3")
-        self.monthly_view.grid(row=1, column=1, sticky="nsew")
+        self.monthly_view.grid(row=0, column=1, sticky="nsew",pady = 2, padx = 5, ipadx = 1, ipady = 1)
         
         self.Activity_frame = ctk.CTkFrame(self.Controls_frame, border_width = 2, border_color="Black", fg_color="#cadeef")
-        self.Activity_frame.grid(row=2, column=1, sticky="nsew")
+        self.Activity_frame.grid(row=1, column=1, sticky="nsew",pady = 2, padx = 5)
+        
+        self.control_frame = ctk.CTkFrame(self.Controls_frame,border_width = 1, border_color="Black", fg_color="#cadeef")
+        self.control_frame.grid(row=2, column=1, sticky="nsew",pady = 2, padx = 5)
         
         self.control_frame_view = ctk.CTkFrame(self.Controls_frame, border_width = 1, border_color="Black", fg_color="#cadeef")
-        self.control_frame_view.grid(row=3, column=1, sticky="nsew")
+        self.control_frame_view.grid(row=3, column=1, sticky="nsew",pady = 2, padx = 5)
         
         
         
@@ -75,101 +75,6 @@ class Control_frame_R(ctk.CTkFrame):
             widget.destroy()
         
     
-    def current_month_budget_table_frame(self):
-        self.clear_budget_screen()
-        self.current_month_displayed = self.current
-        todays_year = self.current_month_displayed.year
-        todays_month= self.current.strftime("%B")
-        return_list = self.Controller.update_table(todays_month,todays_year)
-        
-        labels = [" Date ", " Main ", " Bail-Out "," Saving ", 
-                " transfer-out ", " transfer-In ",
-                " Income ", " Expense "]
-        for col, label in enumerate(labels):
-            ctk.CTkLabel(self.budget_table_frame, text=label,
-                            justify='center',
-                            fg_color="#0784b5",
-                            width=85,
-                            text_color = "black"
-                            ).grid(row=2, column=col, sticky="ewns")
-            
-
-        data = return_list
-        
-        for row, entry_data in enumerate(data, start=3):
-            # Alternate text color for each row
-            fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
-            for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(self.budget_table_frame, text=value,
-                                        justify='center',
-                                        fg_color=fg_color,
-                                        text_color = "black",)
-                entry.grid(row=row, column=col, sticky="nwes")
-                
-        self.monthly_overview(return_list)
-        
-        
-    def last_month_budget_table_frame(self):
-        
-        self.clear_budget_screen()
-
-        previous_month = self.current_month_displayed - relativedelta(months=1)
-        self.current_month_displayed = previous_month
-        year = self.current_month_displayed.year
-        month= self.current_month_displayed.strftime("%B")
-        return_list = self.Controller.update_table(month,year)
-        labels = [" Date ", " Main ", " Bail-Out "," Saving ", 
-                " transfer-out ", " transfer-In ",
-                " Income ", " Expense "]
-        for col, label in enumerate(labels):
-            ctk.CTkLabel(self.budget_table_frame, text=label,
-                            justify='center',
-                            fg_color="#0784b5",
-                            width=85,
-                            text_color = "black"
-                            ).grid(row=2, column=col, sticky="ewns")
-            
-
-        data = return_list
-        
-        for row, entry_data in enumerate(data, start=3):
-            # Alternate text color for each row
-            fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
-            for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(self.budget_table_frame, text=value, width=10, justify='center', fg_color=fg_color,text_color = "black")
-                entry.grid(row=row, column=col, sticky="nwes")
-        self.monthly_overview(return_list)
-        
-    def next_month_budget_table_frame(self):
-        self.clear_budget_screen()
-
-        next_month = self.current_month_displayed + relativedelta(months=1)
-        self.current_month_displayed = next_month
-        year = self.current_month_displayed.year
-        month= self.current_month_displayed.strftime("%B")
-        return_list = self.Controller.update_table(month,year)
-        labels = [" Date ", " Main ", " Bail-Out "," Saving ", 
-                " transfer-out ", " transfer-In ",
-                " Income ", " Expense "]
-        for col, label in enumerate(labels):
-            ctk.CTkLabel(self.budget_table_frame, text=label,
-                            justify='center',
-                            fg_color="#0784b5",
-                            width=85,
-                            text_color = "black"
-                            ).grid(row=2, column=col, sticky="ewns")
-            
-
-        data = return_list
-        
-        for row, entry_data in enumerate(data, start=3):
-            # Alternate text color for each row
-            fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
-            for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(self.budget_table_frame, text=value, width=10, justify='center', fg_color=fg_color,text_color = "black")
-                entry.grid(row=row, column=col, sticky="nwes")
-        self.monthly_overview(return_list)
-        
     def custom_month_budget_table_frame(self, date):
         self.clear_budget_screen()
         date_obj = datetime.strptime(date, '%Y-%m-%d')
@@ -185,22 +90,49 @@ class Control_frame_R(ctk.CTkFrame):
             ctk.CTkLabel(self.budget_table_frame, text=label,
                             justify='center',
                             fg_color="#0784b5",
-                            width=85,
-                            text_color = "black"
+                            width=95,
+                            text_color = "black",
+                            padx = 2
                             ).grid(row=2, column=col, sticky="ewns")
             
 
         data = return_list
         
+        scroll_frame = ctk.CTkScrollableFrame(self.budget_table_frame, width=740, height=850)
+        scroll_frame.grid(row=3, column=0, columnspan = 8, sticky="ew")
         for row, entry_data in enumerate(data, start=3):
             # Alternate text color for each row
             fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
             for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(self.budget_table_frame, text=value, width=10, justify='center', fg_color=fg_color,text_color = "black")
+                entry = ctk.CTkLabel(scroll_frame,
+                                        text=value,
+                                        width=94,
+                                        justify='center',
+                                        fg_color=fg_color,
+                                        text_color = "black")
                 entry.grid(row=row, column=col, sticky="nwes")
         self.monthly_overview(return_list)
     
 
+    def current_month_budget_table_frame(self):
+        self.clear_budget_screen()
+        self.current_month_displayed = self.current
+        date = datetime.strftime(self.current, "%Y-%m-%d")
+        self.custom_month_budget_table_frame(date)       
+    def last_month_budget_table_frame(self):
+        
+        self.clear_budget_screen()
+        previous_month = self.current_month_displayed - relativedelta(months=1)
+        self.current_month_displayed = previous_month
+        date = datetime.strftime(previous_month, "%Y-%m-%d")
+        self.custom_month_budget_table_frame(date)
+    def next_month_budget_table_frame(self):
+        self.clear_budget_screen()
+
+        next_month = self.current_month_displayed + relativedelta(months=1)
+        self.current_month_displayed = next_month
+        date = datetime.strftime(next_month, "%Y-%m-%d")
+        self.custom_month_budget_table_frame(date)
         
     def create_control_buttons_frame(self):
         #fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
@@ -589,8 +521,7 @@ class Control_frame_R(ctk.CTkFrame):
         
         
         # Monthly Summary label
-        ctk.CTkLabel(self.monthly_view, text=f"Monthly Summary", text_color=text_color,# It looks like there is a syntax error in the code snippet provided. The variable `fg_color` is assigned a value of `#0784b`, but the value is missing the closing quotation mark and the closing hashtag. To fix the syntax error, you should provide the complete hexadecimal color value within the quotation marks, like this:
-        fg_color=background3, width=420,height= 30, justify="center", font=("arial", 15)).grid(row=0, column=0, columnspan=5, sticky="ew")
+        ctk.CTkLabel(self.monthly_view, text="Monthly Summary", text_color=text_color,fg_color=background3, width=420,height= 30, justify="center", font=("arial", 15)).grid(row=0, column=0, columnspan=5, sticky="ew")
 
         ctk.CTkLabel(self.monthly_view, text=f"From - {start_date}\n   To - {end_date}", text_color=text_color, width=width, anchor="e", bg_color=background4,font=("arial", 13)).grid(row=1, column=0, sticky="ew")
 
