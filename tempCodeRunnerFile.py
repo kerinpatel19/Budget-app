@@ -1,2 +1,3 @@
-
-    def current_month_budget_table_frame(self):
+print(f"cat - {subcategory}, amount - {total_amount}")
+            labels.append(subcategory)
+            data.append(total_amount)

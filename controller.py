@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from Output_data import view_monthly_budget
 from Output_data import view_expense_by_sub_catogeiors
 from Output_data import get_sub_category
+from Output_data import view_expense_by_dates
 from Input_data.Add_income import Add_Income
 from Input_data.Add_expense import Add_Expense
 from Input_data.Create_transfer import Transfer_money
@@ -11,7 +12,8 @@ class Controller:
     
     def __init__(self):
         self.view_budget = view_monthly_budget.view_budget()  # Instantiate the view_budget class
-        self.find_expense_by_date = view_expense_by_sub_catogeiors.view_Expense()
+        self.find_expense_by_subcategories = view_expense_by_sub_catogeiors.view_Expense()
+        self.find_expense_by_date = view_expense_by_dates.view_Expense_date()
         self.add_income = Add_Income()
         self.add_expense = Add_Expense()
         self.Transfer = Transfer_money()
@@ -60,7 +62,7 @@ class Controller:
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.get_category.Get_Sub_Category(db_host, db_user, db_password, db_name)
         return return_list
-    
+
     def update_table(self,lookup_month_name, year):
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.view_budget.view_Budget(db_host,db_user, db_password, db_name, lookup_month_name, year)
@@ -99,9 +101,13 @@ class Controller:
             
     def look_up_expense(self,look_up_date, sub_catogeiors):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        return_list = self.find_expense_by_date.view_expense(db_host, db_user, db_password, db_name, look_up_date, sub_catogeiors)
+        return_list = self.find_expense_by_subcategories.view_expense(db_host, db_user, db_password, db_name, look_up_date, sub_catogeiors)
         return return_list
-        
+
+    def look_up_expense_by_date(self,look_up_date):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        return_list = self.find_expense_by_date.view_expense_by_date(db_host, db_user, db_password, db_name, look_up_date)
+        return return_list        
         
 #source venv/bin/activate
 

@@ -62,6 +62,7 @@ class view_budget:
                     ]
                     return_list.append(list_format)
                 else: 
+                    return 500
                     print("No data found for date:", lookup_date)
             except Exception as e:
                 print("Error executing query:", e)

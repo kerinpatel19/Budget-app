@@ -43,6 +43,7 @@ class view_Expense:
                 ]
                 return_list.append(list_format)
 
+            
                                 
                 
         except mysql.connector.Error as err:
@@ -51,6 +52,6 @@ class view_Expense:
             # Close the cursor and connection
             cursor.close()
             db_connection.close()
-        
+        print(return_list)
         if return_list is not None:
             return return_list

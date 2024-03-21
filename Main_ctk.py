@@ -2,8 +2,10 @@ import customtkinter as ctk
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_tkagg as tkagg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 from controller import Controller
 
@@ -34,11 +36,12 @@ class Main_frame(ctk.CTkFrame):
         super().__init__(parent)
         self.accounts = ["Checking", "Bail out", "saving"]
         self.current = datetime.now()
+        self.current_month_displayed = self.current
         self.Controller = Controller()  
         self.Create_main_frames()
     
 
-        self.current_month_displayed = self.current 
+ 
     def Create_main_frames(self):
         self.budget_table_frame = ctk.CTkFrame(self, fg_color="black")
         self.budget_table_frame.pack(side="left")
@@ -66,7 +69,7 @@ class Main_frame(ctk.CTkFrame):
         
         
         self.create_control_buttons_frame()
-        self.default_input_area_screen()
+        self.todays_expense_screen()
         self.current_month_budget_table_frame()
     
     def clear_budget_screen(self):
@@ -176,25 +179,39 @@ class Main_frame(ctk.CTkFrame):
         return_list = self.Controller.sub_category()
         return return_list
     #row 2   frame 2  
-    def default_input_area_screen(self):
+    def todays_expense_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
+        date = datetime.strftime(self.current,"%Y-%m-%d")
+        return_list_expense = self.Controller.look_up_expense_by_date(date)
 
-        sizes = [10, 20, 30, 40]  # example data
-        labels = ['A', 'B', 'C', 'D']  # example labels
-        explode = (0, 0.0, 0, 0)  # "explode" the 2nd slice (i.e. 'B')
-
-        fig, ax = plt.subplots(figsize=(1, 1))  # Set the size to 6x6 inches
-        ax.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-            shadow=True, startangle=90,)
-        ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
-
-        canvas = tkagg.FigureCanvasTkAgg(fig, self.control_frame_view)
-        canvas.get_tk_widget().grid(row=2, column=1, sticky="nesw")
-        self.control_frame_view.grid(row=3, column=1, sticky="nesw")
-
+        scrollable_frame = ctk.CTkScrollableFrame(self.control_frame_view, width=400, height=200)
+        scrollable_frame.pack()
         
+        labels = ["Transaction Date", "Account", "Note", "Amount","Sub_Category"]
+        for col, label in enumerate(labels):
+            ctk.CTkLabel(scrollable_frame, text=label,
+                        justify='center',
+                        fg_color="#0784b5",
+                        corner_radius = 2,
+                        text_color="black"
+                        ).grid(row=2, column=col, sticky="ewns", padx=1)
+        
+        data = return_list_expense
+        for row, entry_data in enumerate(data, start=3):
+            # Alternate text color for each row
+            fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
+            
+            for col, value in enumerate(entry_data):
+                entry = ctk.CTkLabel(scrollable_frame,
+                                        text=value, width=10,
+                                        justify='center',
+                                        fg_color=fg_color,
+                                        corner_radius = 2,
+                                        text_color="black")
+                entry.grid(row=row, column=col, sticky="nwes",padx=1)
+
 
     def create_transfer_screen(self):
         # Clear existing content of control_frame_view
@@ -468,8 +485,6 @@ class Main_frame(ctk.CTkFrame):
         submit_button = ctk.CTkButton(self.control_frame_view, text="Submit", command=submit_expense)
         submit_button.grid(row=16, column=0,columnspan = 8, sticky="we")
 
-
-
     def monthly_overview(self, return_list):
         
 
@@ -565,7 +580,7 @@ class Main_frame(ctk.CTkFrame):
             ctk.CTkLabel(scrollable_frame, text=label,
                         justify='center',
                         fg_color="#0784b5",
-                        
+                        corner_radius = 2,
                         text_color="black"
                         ).grid(row=2, column=col, sticky="ewns", padx=1)
         
@@ -575,7 +590,12 @@ class Main_frame(ctk.CTkFrame):
             fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
             
             for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(scrollable_frame, text=value, width=10, justify='center', fg_color=fg_color, text_color="black")
+                entry = ctk.CTkLabel(scrollable_frame,
+                                        text=value, width=10,
+                                        justify='center',
+                                        fg_color=fg_color,
+                                        corner_radius = 2,
+                                        text_color="black")
                 entry.grid(row=row, column=col, sticky="nwes",padx=1)
         
         
@@ -598,10 +618,8 @@ class Main_frame(ctk.CTkFrame):
                     command=summit
                     ).pack()
 
-        
-        
-        
     def activity_view(self, start_date):
+        print("function getting called -activity view")
         # Clear existing content of control_frame_view
         for widget in self.Activity_frame.winfo_children():
             widget.destroy()
@@ -621,17 +639,30 @@ class Main_frame(ctk.CTkFrame):
             date = datetime.strftime(self.current_month_displayed,"%Y-%m-%d")
             self.view_expense(date, subcategory)
         y_offset = 0  # Initial y-coordinate offset
+        
         for idx, subcategory in enumerate(sub_catogeiors):
             return_list_expense = self.Controller.look_up_expense(start_date, subcategory)
             total_amount = 0.0
             for item in return_list_expense:
                 total_amount += item[3]  # Add the amount from each sublist to the total
 
+            print(subcategory,"-",total_amount)
 
-            label_1 = ctk.CTkLabel(self.Activity_frame, text=f"{subcategory}", width=100, bg_color=background4, text_color=text_Color)
+            label_1 = ctk.CTkLabel(self.Activity_frame,
+                                    text=f"{subcategory}",
+                                    width=100,
+                                    bg_color=background4,
+                                    text_color=text_Color,
+                                    corner_radius = 2)
             label_1.grid(row=idx, column=0, sticky="ew")
             
-            label_2 = ctk.CTkLabel(self.Activity_frame, text=f"Amount - ${total_amount}\t", width=180, bg_color=background, fg_color=background, anchor="e", text_color=text_Color)
+            label_2 = ctk.CTkLabel(self.Activity_frame,
+                                    text=f"Amount - ${total_amount}\t",
+                                    width=180, bg_color=background,
+                                    fg_color=background,
+                                    anchor="e",
+                                    text_color=text_Color,
+                                    corner_radius = 2)
             label_2.grid(row=idx, column=1, sticky="ew")
             
             view_button = ctk.CTkButton(self.Activity_frame, text="View Transactions", bg_color=background3,
@@ -640,11 +671,13 @@ class Main_frame(ctk.CTkFrame):
                                         hover_color=hover_color,
                                         border_width=border_Width,
                                         border_color=border_Color,
+                                        corner_radius = 5,
                                         command=lambda subcategory=subcategory: summit(subcategory)
                                         )
             view_button.grid(row=idx, column=2, sticky="ew")
 
             y_offset += 30  # Increase the y-coordinate offset for the next widget
+        
 Driver('Budget app', '600x600').mainloop()
 
 
