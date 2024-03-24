@@ -25,6 +25,7 @@ class Driver(ctk.CTk):
         # Adjust the app size to fit the content
         self.update_idletasks()
         self.geometry(f"{self.winfo_reqwidth()}x{self.winfo_reqheight()}")
+        self.resizable(False, False)
         
 
     
@@ -46,7 +47,7 @@ class Main_frame(ctk.CTkFrame):
         self.budget_table_frame = ctk.CTkFrame(self, fg_color="black")
         self.budget_table_frame.pack(side="left")
         
-        self.Controls_frame = ctk.CTkFrame(self, fg_color="white")
+        self.Controls_frame = ctk.CTkFrame(self, fg_color="black")
         self.Controls_frame.pack(side="right", expand=True,fill="both")
         
         self.Create_all_frames()
@@ -60,7 +61,7 @@ class Main_frame(ctk.CTkFrame):
         self.Activity_frame = ctk.CTkFrame(self.Controls_frame, border_width = 2, border_color="Black", fg_color="#cadeef")
         self.Activity_frame.grid(row=1, column=1, sticky="nsew",pady = 2, padx = 5)
         
-        self.control_frame = ctk.CTkFrame(self.Controls_frame,border_width = 1, border_color="Black", fg_color="#cadeef")
+        self.control_frame = ctk.CTkFrame(self.Controls_frame,border_width = 1, border_color="Black", fg_color="#cadeef", bg_color="black")
         self.control_frame.grid(row=2, column=1, sticky="nsew",pady = 2, padx = 5)
         
         self.control_frame_view = ctk.CTkFrame(self.Controls_frame, border_width = 1, border_color="Black", fg_color="#cadeef")
@@ -85,36 +86,41 @@ class Main_frame(ctk.CTkFrame):
         custom_year = self.current_month_displayed.year
         custom_month= self.current_month_displayed.strftime("%B")
         return_list = self.Controller.update_table(custom_month,custom_year)
-        
-        labels = [" Date ", " Main ", " Bail-Out "," Saving ", 
-                " transfer-out ", " transfer-In ",
-                " Income ", " Expense "]
-        for col, label in enumerate(labels):
-            ctk.CTkLabel(self.budget_table_frame, text=label,
-                            justify='center',
-                            fg_color="#0784b5",
-                            width=95,
-                            text_color = "black",
-                            padx = 2
-                            ).grid(row=2, column=col, sticky="ewns")
-            
+        if return_list == ["No data found"]:
+            ctk.CTkLabel(self.budget_table_frame, text="Not In that year yet. - Add more years",
+                                justify='center',
+                                fg_color="#0784b5",
+                                text_color = "black",
+                                padx = 2
+                                ).grid(row=2, column=1,columnspan=8 , sticky="ewns")
+        else:
+            labels = [" Date ", " Main ", " Bail-Out "," Saving "," transfer-out ", " transfer-In "," Income ", " Expense "]
+            for col, label in enumerate(labels):
+                ctk.CTkLabel(self.budget_table_frame, text=label,
+                                justify='center',
+                                fg_color="#0784b5",
+                                width=95,
+                                text_color = "black",
+                                padx = 2
+                                ).grid(row=2, column=col, sticky="ewns")
+                
 
-        data = return_list
-        
-        scroll_frame = ctk.CTkScrollableFrame(self.budget_table_frame, width=740, height=850)
-        scroll_frame.grid(row=3, column=0, columnspan = 8, sticky="ew")
-        for row, entry_data in enumerate(data, start=3):
-            # Alternate text color for each row
-            fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
-            for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(scroll_frame,
-                                        text=value,
-                                        width=94,
-                                        justify='center',
-                                        fg_color=fg_color,
-                                        text_color = "black")
-                entry.grid(row=row, column=col, sticky="nwes")
-        self.monthly_overview(return_list)
+            data = return_list
+            
+            scroll_frame = ctk.CTkScrollableFrame(self.budget_table_frame, width=500, height=800)
+            scroll_frame.grid(row=3, column=0, columnspan = 8, sticky="ew")
+            for row, entry_data in enumerate(data, start=3):
+                # Alternate text color for each row
+                fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
+                for col, value in enumerate(entry_data):
+                    entry = ctk.CTkLabel(scroll_frame,
+                                            text=value,
+                                            width=94,
+                                            justify='center',
+                                            fg_color=fg_color,
+                                            text_color = "black")
+                    entry.grid(row=row, column=col, sticky="nwes")
+            self.monthly_overview(return_list)
     
 
     def current_month_budget_table_frame(self):
@@ -188,29 +194,35 @@ class Main_frame(ctk.CTkFrame):
 
         scrollable_frame = ctk.CTkScrollableFrame(self.control_frame_view, width=400, height=200)
         scrollable_frame.pack()
-        
-        labels = ["Transaction Date", "Account", "Note", "Amount","Sub_Category"]
-        for col, label in enumerate(labels):
-            ctk.CTkLabel(scrollable_frame, text=label,
-                        justify='center',
-                        fg_color="#0784b5",
-                        corner_radius = 2,
-                        text_color="black"
-                        ).grid(row=2, column=col, sticky="ewns", padx=1)
-        
-        data = return_list_expense
-        for row, entry_data in enumerate(data, start=3):
-            # Alternate text color for each row
-            fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
+        if return_list_expense != ["No expense"]:
+            labels = ["Transaction Date", "Account", "Note", "Amount","Sub_Category"]
+            for col, label in enumerate(labels):
+                ctk.CTkLabel(scrollable_frame, text=label,
+                            justify='center',
+                            fg_color="#0784b5",
+                            corner_radius = 2,
+                            text_color="black"
+                            ).grid(row=2, column=col, sticky="ewns", padx=1)
             
-            for col, value in enumerate(entry_data):
-                entry = ctk.CTkLabel(scrollable_frame,
-                                        text=value, width=10,
-                                        justify='center',
-                                        fg_color=fg_color,
-                                        corner_radius = 2,
-                                        text_color="black")
-                entry.grid(row=row, column=col, sticky="nwes",padx=1)
+            data = return_list_expense
+            for row, entry_data in enumerate(data, start=3):
+                # Alternate text color for each row
+                fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
+                
+                for col, value in enumerate(entry_data):
+                    entry = ctk.CTkLabel(scrollable_frame,
+                                            text=value, width=10,
+                                            justify='center',
+                                            fg_color=fg_color,
+                                            corner_radius = 2,
+                                            text_color="black")
+                    entry.grid(row=row, column=col, sticky="nwes",padx=1)
+        else:
+            ctk.CTkLabel(scrollable_frame, text= "No Expense today",
+                                                justify='center',
+                                                fg_color="#0784b5",
+                                                corner_radius = 2,
+                                                text_color="black").grid(row=1, column=0, columnspan=3)
 
 
     def create_transfer_screen(self):
@@ -236,9 +248,7 @@ class Main_frame(ctk.CTkFrame):
                 combo_a.set("")  # Clear the current selection
                 combo_a['values'] = self.accounts
         #right side
-        text_color2 = "white"        
-                
-    
+        text_color2 = "white"      
         #left side
         background = "#39ace7"
         text_color = "black"
@@ -305,10 +315,15 @@ class Main_frame(ctk.CTkFrame):
             note_entry.insert(0, "ABC...")
             amount_entry.delete(0, ctk.END)
             amount_entry.insert(0, "00.00")
-
+        
         # Create a submit button
         submit_button = ctk.CTkButton(self.control_frame_view, text="Submit", command=submit_transfer)
         submit_button.grid(row=12, column=0,columnspan = 4, sticky="we")
+        
+        def go_back():
+            self.todays_expense_screen()
+        Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
+        Go_back_button.grid(row=12, column=4,columnspan = 4, sticky="we")
     def create_income_screen(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
@@ -389,7 +404,10 @@ class Main_frame(ctk.CTkFrame):
         # Create a submit button
         submit_button = ctk.CTkButton(self.control_frame_view, text="Submit", command=submit_income)
         submit_button.grid(row=16, column=0,columnspan = 4, sticky="we")
-        
+        def go_back():
+            self.todays_expense_screen()
+        Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
+        Go_back_button.grid(row=16, column=4,columnspan = 4, sticky="we")
         
         
         # Add relevant input fields and buttons for transfer screen
@@ -416,7 +434,7 @@ class Main_frame(ctk.CTkFrame):
 
         ctk.CTkLabel(self.control_frame_view, text="Note:",  text_color=text_color, fg_color=background, corner_radius = 2).grid(row=8, column=0,columnspan = 4,sticky="we")
         note_entry = ctk.CTkEntry(self.control_frame_view,text_color=text_color2)
-        note_entry.insert(0, "ABC...")  # Set initial text
+        note_entry.insert(0, "ABC...")  # Set initial text   
         note_entry.bind("<FocusIn>", lambda event: note_entry.delete(0, "end"))  # Remove text on key release
         note_entry.grid(row=8, column=4)
 
@@ -483,7 +501,12 @@ class Main_frame(ctk.CTkFrame):
 
         # Create a submit button
         submit_button = ctk.CTkButton(self.control_frame_view, text="Submit", command=submit_expense)
-        submit_button.grid(row=16, column=0,columnspan = 8, sticky="we")
+        submit_button.grid(row=16, column=0,columnspan = 4, sticky="we")
+        
+        def go_back():
+            self.todays_expense_screen()
+        Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
+        Go_back_button.grid(row=16, column=4,columnspan = 4, sticky="we")
 
     def monthly_overview(self, return_list):
         
@@ -540,21 +563,24 @@ class Main_frame(ctk.CTkFrame):
 
         ctk.CTkLabel(self.monthly_view, text=f"From - {start_date}\n   To - {end_date}", text_color=text_color, width=width, anchor="e", bg_color=background4,font=("arial", 13)).grid(row=1, column=0, sticky="ew")
 
-        ctk.CTkLabel(self.monthly_view, text="Starting Balance", text_color=text_color, width=width,height=30, font=("arial", 10), anchor="se", bg_color=background4).grid(row=1, column=1, sticky="ew")
-        ctk.CTkLabel(self.monthly_view, text="Ending Balance", text_color=text_color, width=width,height=30, font=("arial", 10),anchor="se", bg_color=background4).grid(row=1, column=2, sticky="ew")
+        ctk.CTkLabel(self.monthly_view, text="Starting Balance", text_color=text_color, width=width,height=30, font=("arial", 10), anchor="e", bg_color=background4).grid(row=1, column=1, sticky="ew")
+        ctk.CTkLabel(self.monthly_view, text="Ending Balance", text_color=text_color, width=width,height=30, font=("arial", 10),anchor="e", bg_color=background4).grid(row=1, column=2, sticky="ew")
 
         ctk.CTkLabel(self.monthly_view, text="", text_color=text_color, width=width,height=30, anchor="e", bg_color=background4,font=("arial", 13)).grid(row=1, column=3, sticky="ew", columnspan=2)
 
         # Account labels
-        accounts = ["Checking", "Bail out", "Savings","Monthly Income","Monthly Expense","Monthly transfer In","Monthly transfer Out"]
+        accounts = ["Checking", "Bail out", "Savings","-------------","Monthly Income","Monthly Expense","Monthly transfer In","Monthly transfer Out"]
         for idx, account in enumerate(accounts, start=2):
             ctk.CTkLabel(self.monthly_view, text=account,bg_color=background, text_color=text_color, width=width,height=height, justify="right", anchor=side).grid(row=idx, column=0, sticky="ew")
 
         # Starting balances
-        starting_balances = [start_checking, start_bailout, start_saving,monthly_income,monthly_expenses,monthly_transfer_In,monthly_transfer_Out]
+        starting_balances = [start_checking, start_bailout, start_saving,"",monthly_income,monthly_expenses,monthly_transfer_In,monthly_transfer_Out]
         for idx, balance in enumerate(starting_balances, start=2):
             # Alternate text color for each row
-            ctk.CTkLabel(self.monthly_view, text=f"$ {balance}", text_color=text_color, width=width,height=height, justify="left",anchor=side).grid(row=idx, column=1, sticky="ew")
+            if balance == "":
+                ctk.CTkLabel(self.monthly_view, text=f"{balance}", text_color=text_color, width=width,height=height, justify="left",anchor=side).grid(row=idx, column=1, sticky="ew")
+            else:
+                ctk.CTkLabel(self.monthly_view, text=f"$ {balance}", text_color=text_color, width=width,height=height, justify="left",anchor=side).grid(row=idx, column=1, sticky="ew")
 
         # Ending balances
         ending_balances = [end_checking, end_bailout, end_saving]
@@ -619,7 +645,7 @@ class Main_frame(ctk.CTkFrame):
                     ).pack()
 
     def activity_view(self, start_date):
-        print("function getting called -activity view")
+        
         # Clear existing content of control_frame_view
         for widget in self.Activity_frame.winfo_children():
             widget.destroy()
@@ -646,7 +672,6 @@ class Main_frame(ctk.CTkFrame):
             for item in return_list_expense:
                 total_amount += item[3]  # Add the amount from each sublist to the total
 
-            print(subcategory,"-",total_amount)
 
             label_1 = ctk.CTkLabel(self.Activity_frame,
                                     text=f"{subcategory}",
@@ -678,7 +703,7 @@ class Main_frame(ctk.CTkFrame):
 
             y_offset += 30  # Increase the y-coordinate offset for the next widget
         
-Driver('Budget app', '600x600').mainloop()
+Driver('Budget app', '1200X1200').mainloop()
 
 
 #source myenv/bin/activate

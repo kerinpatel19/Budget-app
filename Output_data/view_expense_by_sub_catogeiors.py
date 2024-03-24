@@ -52,6 +52,5 @@ class view_Expense:
             # Close the cursor and connection
             cursor.close()
             db_connection.close()
-        print(return_list)
         if return_list is not None:
             return return_list
