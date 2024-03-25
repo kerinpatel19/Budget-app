@@ -3,6 +3,7 @@ from Output_data import view_monthly_budget
 from Output_data import view_expense_by_sub_catogeiors
 from Output_data import get_sub_category
 from Output_data import view_expense_by_dates
+from Output_data.view_tabel_names import View_table_names
 from Input_data.Add_income import Add_Income
 from Input_data.Add_expense import Add_Expense
 from Input_data.Create_transfer import Transfer_money
@@ -17,6 +18,7 @@ class Controller:
         self.view_budget = view_monthly_budget.view_budget()  # Instantiate the view_budget class
         self.find_expense_by_subcategories = view_expense_by_sub_catogeiors.view_Expense()
         self.find_expense_by_date = view_expense_by_dates.view_Expense_date()
+        self.view_table = View_table_names()
         self.add_income = Add_Income()
         self.add_expense = Add_Expense()
         self.Transfer = Transfer_money()
@@ -117,11 +119,17 @@ class Controller:
     
     def add_year(self,table_name,year):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        self.table_creator.populate_single_table( db_host, db_user, db_password, db_name, table_name,year)
-        if self.table_creator == True:
+        num = self.table_creator.populate_single_table( db_host, db_user, db_password, db_name, table_name,year)
+        if num == True:
             return f"{year} - successfully added"
         else:
             return f"Failed to add year - {year}"
+        
+    def View_all_year_table(self):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        return_list = self.view_table.View_all_table(db_host, db_user, db_password, db_name)
+        return return_list
+
 #source venv/bin/activate
 
 

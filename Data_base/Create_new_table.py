@@ -5,7 +5,7 @@ class Create_table:
     @classmethod
     def populate_single_table( cls, db_host, db_user, db_password, database_name, table_name,year):
         current_year = int(year)
-        
+        status = False
         try:
             # Establish a connection to MySQL
             db_connection = mysql.connector.connect(
@@ -77,14 +77,12 @@ class Create_table:
                 "Sub_Category VARCHAR(255)"
             ]
             table_name_posted = f"Posted_transactions_{year}"
-            print (table_name_posted)
             # Create a single table for the year
             create_table_query_2 = f"""
             CREATE TABLE IF NOT EXISTS {table_name_posted} (
                 {', '.join(columns_posted)}
             )
             """
-            print(create_table_query_2)
             cursor.execute(create_table_query_2)
             db_connection.commit()
             
@@ -120,12 +118,14 @@ class Create_table:
                 VALUES (%s, %s)
                 """
                 cursor.execute(insert_data_query_cat, (main_category, sub_category))
+            status = True
             
-            return True
+            return status
         except mysql.connector.Error as err:
             print(f"Error: {err}")
-            return False
+            return status
         finally:
             # Close the cursor and connection
             cursor.close()
             db_connection.close()
+            

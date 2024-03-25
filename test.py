@@ -1,9 +1,12 @@
-import matplotlib.pyplot as plt
+from Output_data.view_tabel_names import View_table_names
+from controller import Controller
 
-labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
-sizes = [15, 30, 45, 10]
-explode = (0, 0.0, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
+controller = Controller()
+view_table = View_table_names()
 
-fig, ax = plt.subplots()
-ax.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-        shadow=True, startangle=90)
+db_host, db_user, db_password, db_name = controller.db_connecter()
+
+name_list = view_table.View_all_table(db_host, db_user, db_password, db_name)
+
+print(name_list)
+        

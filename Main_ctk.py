@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinterdnd2 import DND_FILES, TkinterDnD
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import calendar
@@ -119,7 +120,7 @@ class Main_frame(ctk.CTkFrame):
                                             justify='center',
                                             fg_color=fg_color,
                                             text_color = "black")
-                    entry.grid(row=row, column=col, sticky="nwes")
+                    entry.grid(row=row, column=col, sticky="nwes",pady = 1)
             self.monthly_overview(return_list)
     
 
@@ -173,7 +174,7 @@ class Main_frame(ctk.CTkFrame):
         ctk.CTkButton(self.control_frame, text="Next month",command=self.next_month_budget_table_frame,hover_color=hover_color,
                         border_width = border_Width, border_color=border_Color,text_color=text_Color,fg_color=background).grid(row=1,column=2, columnspan=1, rowspan=1, sticky="wen")
 
-        ctk.CTkButton(self.control_frame, text="scan statement",border_width = border_Width,hover_color=hover_color,
+        ctk.CTkButton(self.control_frame, text="scan statement",command=self.Scan_statement,border_width = border_Width,hover_color=hover_color,
                         border_color=border_Color,text_color=text_Color,fg_color=background).grid(row=2, column=0, columnspan=1, rowspan=1, sticky="ewn")
         ctk.CTkButton(self.control_frame, text="Add more year",command=self.Add_year_scree,border_width = border_Width,hover_color=hover_color,
                         border_color=border_Color,text_color=text_Color,fg_color=background).grid(row=2, column=1, columnspan=1, rowspan=1, sticky="ew")
@@ -508,6 +509,27 @@ class Main_frame(ctk.CTkFrame):
         Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
         Go_back_button.grid(row=16, column=4,columnspan = 4, sticky="we")
 
+    def add_year(self, year):
+        # Clear existing content of control_frame_view
+        for widget in self.control_frame_view.winfo_children():
+            widget.destroy()
+
+        table_name = f"Budget{year}"
+        message = self.Controller.add_year(table_name,year)
+        
+        ctk.CTkLabel(self.control_frame_view,
+                                text = message,
+                                text_color="black",
+                                fg_color="#39ace7",
+                                width=420,height= 30,
+                                justify="center",
+                                font=("arial", 15)
+                                ).grid(row=0, column=0, columnspan=5, rowspan=4, sticky="ew")
+        def go_back():
+            self.todays_expense_screen()
+        Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
+        Go_back_button.grid(row=4, column=0,columnspan = 4, sticky="we")
+        
     def Add_year_scree(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
@@ -521,11 +543,11 @@ class Main_frame(ctk.CTkFrame):
                                 text = "Add more years",
                                 text_color=text_color,
                                 fg_color=background4,
-                                width=450,height= 30,
+                                width=420,height= 30,
                                 justify="center",
                                 font=("arial", 15)
                                 )
-        header.grid(row=0,column=0,columnspan=3, sticky="ew")
+        header.grid(row=0,column=0,columnspan=2, sticky="ew")
         
         label1 = ctk.CTkLabel(self.control_frame_view,
                                 text = "years",
@@ -541,69 +563,84 @@ class Main_frame(ctk.CTkFrame):
         Entry.insert(0, "YYYY")  # Set initial text
         Entry.bind("<FocusIn>", lambda event: Entry.delete(0, "end"))  # Remove text on focus
         Entry.grid(row=2, column=0)
-        
-        width = 200
-        scrollable_frame = ctk.CTkScrollableFrame(self.control_frame_view,height=10, width= 10)
-        scrollable_frame.grid(row=1, column=1, rowspan=2)
-        
-        ctk.CTkLabel(scrollable_frame, text="Current available years",
+        ctk.CTkLabel(self.control_frame_view, text="Current available years",
                             justify='center',
-                            fg_color="#0784b5",
+                            fg_color=background3,
                             corner_radius = 2,
                             text_color="black"
-                            ).grid(row=0, column=0, sticky="ewns", padx=1)
+                            ).grid(row=1, column=1, sticky="ewns", padx=1)
+        width = 200
+        scrollable_frame = ctk.CTkScrollableFrame(self.control_frame_view,
+                                                    width=130, height= 80,orientation='horizontal')
+        scrollable_frame.grid(row=2, column=1, rowspan=2)
         
-        data = [2023,2024,2025]
-        for col, value in enumerate(data):
-            if col == 0:
-                col = col+1
+        years = self.Controller.View_all_year_table()
+        
+        i = 0
+        row = 0
+        o = 0
+        for i in range(len(years)):
+            label = ctk.CTkLabel(scrollable_frame,
+                                    text = years[i],
+                                    text_color= "black",
+                                    fg_color= "white",
+                                    width= 30,
+                                    )
+            label.grid(row=row, column=o, pady = 1, padx = 1)
+            row = row + 1 
+            if row == 2:
+                o = o + 1
+                row = 0
+                
             
-            entry = ctk.CTkLabel(scrollable_frame,
-                                    text=value,
-                                    justify='center',
-                                    fg_color="#0784b5",
-                                    corner_radius = 2,
-                                    text_color="black")
-            entry.grid(row=col, column=0, sticky="nwes")
-
-        
+            
         
         def summit():
-            pass
+            year = Entry.get()
+            self.add_year(year)
         # Create a submit button
         submit_button = ctk.CTkButton(self.control_frame_view, text="Submit", command=summit)
-        submit_button.grid(row=3, column=0, sticky="we")
+        submit_button.grid(row=7, column=0, sticky="we")
         
         def go_back():
             self.todays_expense_screen()
         Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
-        Go_back_button.grid(row=3, column=1, sticky="we")
+        Go_back_button.grid(row=7, column=1, sticky="we")
         
-    def add_year(self, year):
+    def view_all_year(self):
+        pass
+
+    def Scan_statement(self):
         # Clear existing content of control_frame_view
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
-            
         
-        year = input("what year :")
-        table_name = f"Budget{year}"
-        message = self.Controller.add_year(table_name,year)
+        header = ctk.CTkLabel(self.control_frame_view,
+                                text="Drag and Drop Files",
+                                text_color="black",
+                                bg_color='#0784b5')
+        header.pack(fill="x")
         
-        ctk.CTkLabel(self.control_frame_view,
-                                text = message,
-                                text_color="back",
-                                fg_color="blue",
-                                width=420,height= 30,
-                                justify="center",
-                                font=("arial", 15)
-                                ).grid(row=0, column=0, columnspan=5, rowspan=4, sticky="ew")
+        drop_zone = ctk.CTkLabel(self.control_frame_view,
+                                text="Drop zone",
+                                text_color="black",
+                                bg_color='#bebec2',
+                                height=125)
+        drop_zone.pack(fill="x")
+
+        # Define the drop event handler
+        def handle_drop(event):
+            files = event.data
+            for file_path in files:
+                print(f"Dropped file: {file_path}")
+
+        
         def go_back():
             self.todays_expense_screen()
-        Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
-        Go_back_button.grid(row=4, column=0,columnspan = 4, sticky="we")
 
-    def view_all_year(self):
-        pass
+        Go_back_button = ctk.CTkButton(self.control_frame_view, text="Go back", command=go_back)
+        Go_back_button.pack(fill="x")
+
 
         
     def monthly_overview(self, return_list):
