@@ -1,4 +1,4 @@
-from Output_data.view_tabel_names import View_table_names
+from Output_data.view_table_names import View_table_names
 from controller import Controller
 
 controller = Controller()

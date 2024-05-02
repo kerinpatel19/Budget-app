@@ -2,9 +2,9 @@ import mysql.connector
 from datetime import datetime, timedelta
 
 
-class Get_sub_category:
+class GetCategory:
     @classmethod
-    def Get_Sub_Category(cls, db_host, db_user, db_password, db_name):
+    def get_category(cls,db_host, db_user, db_password, db_name,Control_category):
         return_list = []
         
         table_name = f"categorys"
@@ -20,8 +20,8 @@ class Get_sub_category:
         
         try:
             # Construct and execute the SQL query to select all distinct values from the Sub_Category column
-            select_query = f"SELECT DISTINCT Sub_Category FROM {table_name}"
-            cursor.execute(select_query)
+            select_query = f"SELECT DISTINCT Sub_Category FROM {table_name} WHERE Category = %s"
+            cursor.execute(select_query, (Control_category,))
 
             # Fetch all the rows
             rows = cursor.fetchall()

@@ -74,7 +74,8 @@ class Create_table:
                 "Note  VARCHAR(255)",
                 "Amount DECIMAL(10, 2)",
                 "Category VARCHAR(255)",
-                "Sub_Category VARCHAR(255)"
+                "Sub_Category VARCHAR(255)",
+                "Bank_verified VARCHAR(255)"
             ]
             table_name_posted = f"Posted_transactions_{year}"
             # Create a single table for the year
@@ -86,7 +87,7 @@ class Create_table:
             cursor.execute(create_table_query_2)
             db_connection.commit()
             
-            table_name2 = 'Categorys'
+            table_name2 = 'categories'
             category_columns = [
                 "ID int AUTO_INCREMENT PRIMARY KEY",
                 "Category VARCHAR(255)",
@@ -96,20 +97,23 @@ class Create_table:
             # Create the Categorys table
             create_table_query5 = f"CREATE TABLE IF NOT EXISTS {table_name2.lower()} ({', '.join(category_columns)})"
             cursor.execute(create_table_query5)
-
+            db_connection.commit()
+            
             categories = [
                 ("Income", "Income"),
-                ("Expense", "Expense"),
-                ("Transfer", "In Transfer"),
-                ("Transfer", "Out Transfer"),
-                ("Expense", "Fixed Expense"),
-                ("Expense", "Going out"),
-                ("Expense", "School"),
-                ("Expense", "Food"),
-                ("Expense", "Taxes"),
-                ("Expense", "Other"),
                 ("Income", "Tax Refund"),
                 ("Income", "Refund"),
+                ("Transfer", "In Transfer"),
+                ("Transfer", "Out Transfer"),
+                ("Expense", "Wants - Expense"),
+                ("Expense", "Needs - Expense"),
+                ("Expense", "Fixed Expense"),
+                ("Expense", "subscription"),
+                ("Expense", "School"),
+                ("Expense", "Takeout - Food"),
+                ("Expense", "Grocery - Food"),
+                ("Expense", "Taxes"),
+                ("Expense", "Other")
             ]
 
             for main_category, sub_category in categories:
@@ -118,6 +122,7 @@ class Create_table:
                 VALUES (%s, %s)
                 """
                 cursor.execute(insert_data_query_cat, (main_category, sub_category))
+                db_connection.commit()
             status = True
             
             return status

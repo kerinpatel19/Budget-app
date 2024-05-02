@@ -11,7 +11,7 @@ from Input_data.Create_transfer import Transfer_money
 from Input_data.Add_fixed_expense import Add_fixed_expense
 from Data_base.Create_database import Create_data_base
 from Data_base.Create_new_table import Create_table
-from Data_base.Delete_year import delete_year
+from Remove_data.Delete_year import delete_year
 from Input_data.Add_starting_balance import StartBalance
 from data_extract.data_sorter import line_extract
 from Ledger import update_expense
