@@ -23,18 +23,21 @@ class view_Expense:
         return_list = []
         
         try:
-            select_query = f"SELECT * FROM `{table_name}` WHERE YEAR(TransactionDate) = %s AND MONTH(TransactionDate) = %s AND Sub_Category IN (%s)"
+            select_query = f"SELECT * FROM `{table_name}` WHERE TransactionDate = %s AND Sub_Category IN (%s)"
 
-            cursor.execute(select_query, (look_up_date.year, look_up_date.month, sub_catogeiors))
+            cursor.execute(select_query, (look_up_date, sub_catogeiors))
     
             # Fetch all the rows
             rows = cursor.fetchall()
             
             for row in rows:
+                Id = row[0]
                 date = datetime.strftime(row[1], '%Y-%m-%d')  # Format date as string
                 note = row[3].strip()  # Clean the 'note' text by removing leading and trailing whitespace
                 category = row[6].strip()  # Clean the 'Category' text by removing leading and trailing whitespace
+                
                 list_format = [
+                    Id,
                     date,          # date
                     row[2],        # account
                     note,          # cleaned 'note'
@@ -42,15 +45,12 @@ class view_Expense:
                     category       # cleaned 'Category'
                 ]
                 return_list.append(list_format)
+                return return_list
 
-            
-                                
-                
         except mysql.connector.Error as err:
             print(f"Error: {err}")
         finally:
             # Close the cursor and connection
             cursor.close()
             db_connection.close()
-        if return_list is not None:
-            return return_list
+        

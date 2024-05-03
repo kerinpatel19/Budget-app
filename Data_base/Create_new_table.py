@@ -90,7 +90,7 @@ class Create_table:
             table_name2 = 'categories'
             category_columns = [
                 "ID int AUTO_INCREMENT PRIMARY KEY",
-                "Category VARCHAR(255)",
+                "Control_Category VARCHAR(255)",
                 "Sub_Category VARCHAR(255)"
             ]
 

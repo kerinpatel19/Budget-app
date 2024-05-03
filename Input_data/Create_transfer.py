@@ -15,7 +15,7 @@ bailout_account_update = Update_bailout_account()
 class Transfer_money:
     @classmethod
     
-    def Create_Transfer(cls, db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount):
+    def Create_Transfer(cls, db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount,Bank_verified):
         # Convert start_date to a datetime object if it's a string
         Category = "Transfer"
         if isinstance(Transfer_date, str):
@@ -112,9 +112,9 @@ class Transfer_money:
 
                 print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
                 #from post
-                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Transfer_date, From_account, note, amount,"Transfer", "Transfer OUT")
+                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Transfer_date, From_account, note, amount,"Transfer", "Transfer OUT",Bank_verified)
                 #too post
-                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Transfer_date, To_account, note, amount,"Transfer", "Transfer IN")
+                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Transfer_date, To_account, note, amount,"Transfer", "Transfer IN",Bank_verified)
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
             

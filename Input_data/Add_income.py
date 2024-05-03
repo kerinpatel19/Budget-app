@@ -11,7 +11,7 @@ checking_account_update = update_checking_account()
 class Add_Income:
     @classmethod
     
-    def Add_income(cls, db_host, db_user, db_password, db_name, Income_date, note, amount, sub_category):
+    def Add_income(cls, db_host, db_user, db_password, db_name, Income_date, note, amount, sub_category,Bank_verified):
         # Convert start_date to a datetime object if it's a string
         if isinstance(Income_date, str):
             Income_date = datetime.strptime(Income_date, '%Y-%m-%d')
@@ -65,7 +65,7 @@ class Add_Income:
 
                 print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
 
-                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Income_date, "Checking_Account", note, amount, "Income",sub_category)
+                post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Income_date, "Checking_Account", note, amount, "Income",sub_category,Bank_verified)
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
             

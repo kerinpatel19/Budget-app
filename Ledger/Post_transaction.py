@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 class Add_Transaction:
     @classmethod
     
-    def Add_Transaction(cls, db_host, db_user, db_password, database_name, TransactionDate, Account, Note, Amount, Category, Sub_Category):
+    def Add_Transaction(cls, db_host, db_user, db_password, database_name, TransactionDate, Account, Note, Amount, Category, Sub_Category,Bank_verified):
         
         # Establish a connection to MySQL
         db_connection = mysql.connector.connect(
@@ -28,11 +28,11 @@ class Add_Transaction:
         
         
         insert_data_query = f"""
-            INSERT INTO {table_name} (TransactionDate, Account, Note, Amount, Category, Sub_Category) 
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO {table_name} (TransactionDate, Account, Note, Amount, Category, Sub_Category, Bank_verified) 
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
 
-        data = (TransactionDate, Account,Note, Amount, Category, Sub_Category)
+        data = (TransactionDate, Account,Note, Amount, Category, Sub_Category, Bank_verified)
         
         try:
                     cursor.execute(insert_data_query, data)

@@ -7,7 +7,7 @@ class GetCategory:
     def get_category(cls,db_host, db_user, db_password, db_name,Control_category):
         return_list = []
         
-        table_name = f"categorys"
+        table_name = f"categories"
         
         # Establish a connection to MySQL
         db_connection = mysql.connector.connect(
@@ -20,7 +20,7 @@ class GetCategory:
         
         try:
             # Construct and execute the SQL query to select all distinct values from the Sub_Category column
-            select_query = f"SELECT DISTINCT Sub_Category FROM {table_name} WHERE Category = %s"
+            select_query = f"SELECT DISTINCT Category FROM {table_name} WHERE Control_Category = %s"
             cursor.execute(select_query, (Control_category,))
 
             # Fetch all the rows
@@ -29,13 +29,14 @@ class GetCategory:
             # Display the results
             for row in rows:
                 return_list.append(row[0])  # Assuming Sub_Category is the first (0-indexed) column
-            
+            return return_list
         except mysql.connector.Error as err:
+            print(1)
             print(f"Error: {err}")
         finally:
             # Close the cursor and connection
             cursor.close()
             db_connection.close()
-        return return_list
+
     
     

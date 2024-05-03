@@ -4,6 +4,7 @@ from Output_data import view_expense_by_sub_category
 from Output_data.get_category_by_control_category import GetCategory
 from Output_data import view_expense_by_dates
 from Output_data.view_table_names import View_table_names
+from Output_data.view_sub_category_summary import GetCategoryAmount
 from Input_data.Add_starting_balance import StartBalance
 from Input_data.Add_income import Add_Income
 from Input_data.Add_expense import Add_Expense
@@ -14,7 +15,7 @@ from Data_base.Create_new_table import Create_table
 from Remove_data.Delete_year import delete_year
 from Input_data.Add_starting_balance import StartBalance
 from data_extract.data_sorter import line_extract
-from Ledger import update_expense
+from Ledger import update_expense_category
 from Refresh_db.update_checking import update_checking_account
 from Remove_data.Delete_expense import Delete_expense
 class Controller:
@@ -24,6 +25,7 @@ class Controller:
         self.find_expense_by_subcategories = view_expense_by_sub_category.view_Expense()
         self.find_expense_by_date = view_expense_by_dates.view_Expense_date()
         self.view_table = View_table_names()
+        self.sub_category_summary = GetCategoryAmount()
         self.add_starting_bal= StartBalance()
         self.add_income = Add_Income()
         self.add_expense = Add_Expense()
@@ -35,16 +37,17 @@ class Controller:
         self.Delete_year = delete_year()
         self.Starter_balance = StartBalance()
         self.sort_data = line_extract()
-        self.update_expense = update_expense.update_expense()
+        self.update_expense = update_expense_category.Update_expense_category()
         self.checking_account_update = update_checking_account()
         self.delete_expense = Delete_expense ()
+    
         
     def db_connecter(self):
         db_host = None
         db_user = None
         db_password = None
         db_name = None
-        file_path = "/Users/kerinpatel/Desktop/Projects-python/Budget_app/config.gitingore/database_key.txt"
+        file_path = "/Users/kerinpatel/Desktop/Projects-python/Budget-app/config.gitingore/database_key.txt"
         try:
             with open(file_path, 'r') as file:
                 lines = file.readlines()
@@ -85,12 +88,17 @@ class Controller:
             return_list = self.get_category.get_category(db_host, db_user, db_password, db_name,Control_Category)
         else:
             Control_Category_list = ["Transfer","Income","Expense"]
-            for Control_category in range(len(Control_Category_list)):
-                List = self.get_category.get_category(db_host, db_user, db_password, db_name,Control_category)
+            for i in range(len(Control_Category_list)):
+                category = Control_Category_list[i]
+                List = self.get_category.get_category(db_host, db_user, db_password, db_name,category)
                 for i in range(len(List)):
                     return_list.append(List[i])
         return return_list
-        
+    
+    def view_sub_category_summary(self, start_date):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        return_list = self.sub_category_summary.get_category_amount(db_host, db_user, db_password, db_name, start_date)
+        return return_list
 
     def update_table(self,lookup_month_name, year):
         db_host, db_user, db_password, db_name = self.db_connecter()
@@ -118,7 +126,7 @@ class Controller:
         
         else:
             return ("fail")
-    def Create_transfer(self,From_account, To_account, Transfer_date, note, amount):
+    def Create_transfer(self,From_account, To_account, Transfer_date, note, amount,Bank_verified):
         db_host, db_user, db_password, db_name = self.db_connecter()
         
         if To_account == "Checking":
@@ -136,7 +144,7 @@ class Controller:
             From_account = 'Savings'
         
         
-        self.Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount)
+        self.Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount,Bank_verified)
             
     def look_up_expense(self,look_up_date, sub_catogeiors):
         db_host, db_user, db_password, db_name = self.db_connecter()
@@ -192,9 +200,9 @@ class Controller:
         self.checking_account_update.Update_Checking_account(db_host, db_user,db_password,db_name,table_name,date.year)
 
                 
-    def Update_expense(self,transaction_date,account,note,amount,new_category):
+    def Update_expense(self,transaction_ID,transaction_date,new_category,year):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        self.update_expense.update(db_host, db_user, db_password, db_name,transaction_date,account,note,amount,new_category)
+        self.update_expense.update_category(db_host, db_user, db_password, db_name,transaction_ID,transaction_date,new_category,year)
     
     def Process_pdf(self, path_name):
         db_host, db_user, db_password, db_name = self.db_connecter()

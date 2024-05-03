@@ -1,12 +1,24 @@
-from Output_data.view_table_names import View_table_names
-from controller import Controller
+#from controller import Controller
+#
+#controller = Controller()
+#
+#db_host, db_user, db_password, db_name = controller.db_connecter()
+#start_date = "2024-04-06"
+#data = "Transfer"
+#name_list = controller.look_up_expense(start_date, data)
+#
+#print(name_list)
+from datetime import datetime, timedelta
 
-controller = Controller()
-view_table = View_table_names()
+# Starting date of the month
+start_date = datetime(2024, 7, 1)
 
-db_host, db_user, db_password, db_name = controller.db_connecter()
+# Calculate the end of the month
+if start_date.month == 12:
+    end_date = start_date.replace(day=1, month=1, year=start_date.year + 1)
+else:
+    end_date = start_date.replace(day=1, month=start_date.month + 1)
 
-name_list = view_table.View_all_table(db_host, db_user, db_password, db_name)
+end_date -= timedelta(days=1)
 
-print(name_list)
-        
+print("End of the month date:", end_date.date())

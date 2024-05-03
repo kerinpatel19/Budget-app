@@ -138,6 +138,8 @@ class Main_frame(ctk.CTkFrame):
         
         def combobox_callback(choice):
             self.new_category = choice
+        
+        print(return_list)
 
         for i in range(len(return_list)):
             frame = ctk.CTkFrame(Expense_list_frame,
@@ -148,11 +150,11 @@ class Main_frame(ctk.CTkFrame):
             frame.pack(fill="x", padx=5,pady=2, ipady=1)
             
             labels = ["Transaction ID","Transaction Date", "Account", "Note", "Amount","Sub Category"]
-            data = [return_list[expense_counter][0],
-                    return_list[expense_counter][1],
-                    return_list[expense_counter][2],
-                    return_list[expense_counter][3],
-                    return_list[expense_counter][4]
+            data = [return_list[i][0],
+                    return_list[i][1],
+                    return_list[i][2],
+                    return_list[i][3],
+                    return_list[i][4]
                     ]
             for i in range(len(labels)):
                 ctk.CTkLabel(frame,
@@ -199,16 +201,16 @@ class Main_frame(ctk.CTkFrame):
         def go_back():
             date = datetime.strftime(self.current_month_displayed,'%Y-%m-%d')
             self.custom_month_budget_table_frame(date)
-        Go_back_button = ctk.CTkButton(Expense_list_frame, text="Go back",
+        Go_back_button = ctk.CTkButton(self.budget_table_frame, text="Go back",
                                                 command=go_back)
         Go_back_button.grid(row=1, column=0, sticky="wesn")
     def update_expense(self, frame):
         # Extract data from the frame
+        transaction_ID = frame.grid_slaves(row=0, column=1)[0].cget("text")
         transaction_date = frame.grid_slaves(row=0, column=1)[0].cget("text")
-        account = frame.grid_slaves(row=1, column=1)[0].cget("text")
-        note = frame.grid_slaves(row=2, column=1)[0].cget("text")
-        amount = frame.grid_slaves(row=3, column=1)[0].cget("text")
-        self.Controller.Update_expense(transaction_date,account,note,amount,self.new_category)
+        date = datetime.strptime(transaction_date,"%Y-%m-%d")
+        year = int(date.year)
+        self.Controller.Update_expense(transaction_ID,transaction_date,self.new_category,year)
         frame.destroy()
 
     def delete_expense(self, frame):
@@ -427,7 +429,7 @@ class Main_frame(ctk.CTkFrame):
             category = "transfer"
             
                     # Call the Controller's method to handle the transfer submission
-            self.Controller.Create_transfer(from_account, to_account, transfer_date, note, amount)
+            self.Controller.Create_transfer(from_account, to_account, transfer_date, note, amount,Bank_verified=False)
 
             
             # Show a label over the Submit button
@@ -599,7 +601,7 @@ class Main_frame(ctk.CTkFrame):
             expense_date = expense_date_entry.get()
             note = note_entry.get()
             amount = float(amount_entry.get())
-            sub_category = self.sub_category.get()
+            sub_category = from_dropdown.get()
             if self.fixed_expense == True:
                 category = "Fixed Expense"
                 self.Controller.add_transaction(expense_date, note, amount, category,sub_category,False)
@@ -1078,16 +1080,27 @@ class Main_frame(ctk.CTkFrame):
         border_Color = "black"
         width = 2
         def summit(subcategory):
-            date = datetime.strftime(self.current_month_displayed,"%Y-%m-%d")
-            self.view_expense(date, subcategory)
+            self.view_expense(start_date, subcategory)
         y_offset = 0  # Initial y-coordinate offset
         
-        for idx, subcategory in enumerate(sub_catogeiors):
-            return_list_expense = self.Controller.look_up_expense(start_date, subcategory)
-            total_amount = 0.0
-            total_amount = math.fsum(float(item[4]) for item in return_list_expense)
-
-            if total_amount != 0.00:
+        summary_list = self.Controller.view_sub_category_summary(start_date)
+        print(summary_list)
+        
+        if sub_catogeiors == None:
+            inner_frame = ctk.CTkFrame(frame)
+            inner_frame.pack(fill="x")  # Use pack to manage inner_frame
+            label_1 = ctk.CTkLabel(inner_frame,
+                                    text=f"No Transactions available",
+                                    width=100,
+                                    bg_color=background4,
+                                    text_color=text_Color,
+                                    corner_radius=2,wraplength=100)
+            label_1.pack( fill = "both")  # Use pack to manage label_1
+        elif sub_catogeiors != None:
+            for i in range(len(summary_list)):
+                subcategory = summary_list[i][0]
+                total_amount = summary_list[i][1]
+                
                 inner_frame = ctk.CTkFrame(frame)
                 inner_frame.pack(fill="x")  # Use pack to manage inner_frame
                 label_1 = ctk.CTkLabel(inner_frame,
@@ -1121,7 +1134,9 @@ class Main_frame(ctk.CTkFrame):
 
 
                 y_offset += 30  # Increase the y-coordinate offset for the next widget
-            
+
+
+        
 Driver('Budget app', '1200X1200').mainloop()
 
 

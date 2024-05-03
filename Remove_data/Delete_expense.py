@@ -6,13 +6,12 @@ Update_all_accounts = update_all_accounts()
 
 class Delete_expense:
     @classmethod
-    def delete_expense (cls, db_host, db_user, db_password, db_name, row_ID, row_date):
+    def delete_expense (cls, db_host, db_user, db_password, db_name, row_ID, row_date,year):
         
         if isinstance(row_date, str):
             row_date = datetime.strptime(row_date, '%Y-%m-%d')
     
         # Access the year attribute after ensuring start_date is a datetime object
-        year = row_date.year
         posted_table_name = f"Posted_transactions_{year}"
         budget_table_name = f"Budget{year}"
         
