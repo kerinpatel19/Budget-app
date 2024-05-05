@@ -23,12 +23,11 @@ class Update_expense_category:
             cursor.execute(update_query, (new_category, transaction_ID,transaction_date))
             db_connection.commit()
 
-            #return f"Sub_Category updated successfully for transaction ID {transaction_ID} in {table_name}."
+            return f"Category updated successfully for transaction ID {transaction_ID}."
 
         except mysql.connector.Error as err:
             db_connection.rollback()
-            print(f"Error: {err}")
-            #return f"Failed to update Sub_Category for transaction ID {transaction_ID} in {table_name}."
+            return f"Failed to update Category for transaction ID {transaction_ID}."
 
         finally:
             # Close the cursor and connection

@@ -1,24 +1,11 @@
-#from controller import Controller
-#
-#controller = Controller()
-#
-#db_host, db_user, db_password, db_name = controller.db_connecter()
-#start_date = "2024-04-06"
-#data = "Transfer"
-#name_list = controller.look_up_expense(start_date, data)
-#
-#print(name_list)
-from datetime import datetime, timedelta
+from controller import Controller
 
-# Starting date of the month
-start_date = datetime(2024, 7, 1)
+controller = Controller()
 
-# Calculate the end of the month
-if start_date.month == 12:
-    end_date = start_date.replace(day=1, month=1, year=start_date.year + 1)
-else:
-    end_date = start_date.replace(day=1, month=start_date.month + 1)
+db_host, db_user, db_password, db_name = controller.db_connecter()
+row_ID = 21
+row_date = "2023-12-31"
+year = 2024
+name_list = controller.delete_expense_row(row_ID, row_date,year)
 
-end_date -= timedelta(days=1)
-
-print("End of the month date:", end_date.date())
+print(name_list)

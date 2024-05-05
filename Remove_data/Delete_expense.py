@@ -205,10 +205,10 @@ class Delete_expense:
                     # Commit the changes
                     db_connection.commit()
 
-                    print(f"Row with ID {row_ID} deleted from {posted_table_name}")
+                    return(f"Transaction ID {row_ID} - Deleted")
                 except mysql.connector.Error as err:
-                    print(f"Error: {err}")
+                    return(f"Error: {err}")
                     
         else:
-            print(f"No expense found for {row_date}")
+            return(f"No expense found for {row_date}")
         

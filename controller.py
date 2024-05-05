@@ -146,9 +146,9 @@ class Controller:
         
         self.Transfer.Create_Transfer(db_host, db_user, db_password, db_name, From_account, To_account, Transfer_date, note, amount,Bank_verified)
             
-    def look_up_expense(self,look_up_date, sub_catogeiors):
+    def look_up_expense(self,Start_date, sub_catogeiors):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        return_list = self.find_expense_by_subcategories.view_expense(db_host, db_user, db_password, db_name, look_up_date, sub_catogeiors)
+        return_list = self.find_expense_by_subcategories.view_expense(db_host, db_user, db_password, db_name, Start_date, sub_catogeiors)
         return return_list
 
     def look_up_expense_by_date(self,look_up_date):
@@ -174,8 +174,8 @@ class Controller:
     
     def delete_expense_row(self, row_ID, row_date,year):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        self.delete_expense.delete_expense(db_host, db_user, db_password, db_name, row_ID, row_date,year)
-        
+        message = self.delete_expense.delete_expense(db_host, db_user, db_password, db_name, row_ID, row_date,year)
+        return message
         
     def View_all_year_table(self):
         db_host, db_user, db_password, db_name = self.db_connecter()
@@ -202,8 +202,12 @@ class Controller:
                 
     def Update_expense(self,transaction_ID,transaction_date,new_category,year):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        self.update_expense.update_category(db_host, db_user, db_password, db_name,transaction_ID,transaction_date,new_category,year)
-    
+        if new_category != None:
+            message = self.update_expense.update_category(db_host, db_user, db_password, db_name,transaction_ID,transaction_date,new_category,year)
+            return message
+        else:
+            message = "Select new category"
+            return message
     def Process_pdf(self, path_name):
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.sort_data.extract_lines(path_name,db_host, db_user, db_password, db_name)
