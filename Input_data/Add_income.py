@@ -68,7 +68,9 @@ class Add_Income:
                 post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Income_date, "Checking_Account", note, amount, "Income",sub_category,Bank_verified)
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
-            
+            finally :
+                db_connection.commit()
+                cursor.close()
         else:
             print(f"No expense found for {Income_date}")
         checking_account_update.Update_Checking_account(db_host, db_user,db_password,db_name,table_name,year)

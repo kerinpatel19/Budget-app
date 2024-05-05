@@ -69,7 +69,9 @@ class Add_Expense:
                 post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, Expense_date, "Checking_Account", note, amount, "Expense", Sub_Category,Bank_verified)
             except mysql.connector.Error as err:
                 print(f"Error: {err}")
-            
+            finally :
+                db_connection.commit()
+                cursor.close()
         else:
             print(f"No expense found for {Expense_date}")
 

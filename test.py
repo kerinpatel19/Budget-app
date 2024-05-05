@@ -1,11 +1,11 @@
 from controller import Controller
-
+import mysql.connector
+from Output_data.yearly_summary import Get_summary
 controller = Controller()
+summary = Get_summary()
 
 db_host, db_user, db_password, db_name = controller.db_connecter()
-row_ID = 21
-row_date = "2023-12-31"
 year = 2024
-name_list = controller.delete_expense_row(row_ID, row_date,year)
+list_return = summary.get_month_data(db_host, db_user, db_password, db_name, year)
 
-print(name_list)
+print(list_return)

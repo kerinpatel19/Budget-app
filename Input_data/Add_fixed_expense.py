@@ -82,11 +82,6 @@ class Add_fixed_expense:
                 
             else:
                 print(f"No expense found for {current_date}")
-
-            
-            
-            
-            
             # Add 1 month to the original date
             new_date = current_date + relativedelta(months=1)
             current_date = new_date

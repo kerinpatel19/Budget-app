@@ -155,7 +155,7 @@ class Main_frame(ctk.CTkFrame):
                 c = 0
             else:
                 c += 1
-            labels = ["Transaction Date", "Account", "Note", "Amount","Sub Category"]
+            labels = ["Transaction Date", "Account", "Note", "Amount","Sub Category", "Bank Verified"]
             data = [
                     return_list[i][1],
                     return_list[i][2],
@@ -211,23 +211,26 @@ class Main_frame(ctk.CTkFrame):
                                         command=combobox_callback)
             category_select.grid(row=i + 2, column = 1, sticky="w")
             category_select.set(return_list[expense_counter][5])
+            
+            #0 is false and 1 is true
+            if int(return_list[expense_counter][6]) == 0: #false
+                image_path = "/Users/kerinpatel/Desktop/Projects-python/Budget-app/images/unverified.png"
+            else:
+                image_path = "/Users/kerinpatel/Desktop/Projects-python/Budget-app/images/verified.png"
+                
+                
+            image = ctk.CTkImage(Image.open(image_path), size=(150, 50))
+            # Create a ctk Label widget to display the image
+            label = ctk.CTkLabel(frame, image= image, text="", fg_color="transparent")
+            # Display the label
+            label.grid(row=i + 3, column=1, sticky="ew", pady=5)
+            
             # Edit Button
             Delete_button = ctk.CTkButton(frame, text="Delete", command=lambda f=frame: self.delete_expense(f))
-            Delete_button.grid(row=i + 3, column=0, columnspan =1, rowspan = 1, sticky="wesn",pady=1, padx = 5)
+            Delete_button.grid(row=i + 4, column=0, columnspan =1, rowspan = 1, sticky="wesn",pady=1, padx = 5)
             Update_button = ctk.CTkButton(frame, text="Update", command=lambda f=frame: self.update_expense(f), state="disabled")
-            Update_button.grid(row=i + 3, column=1, columnspan =1, rowspan = 1, sticky="wesn",pady=1, padx = 5)
-            print("bank verified - ",return_list[expense_counter][6])
-            if int(return_list[expense_counter][6]) == 1:
-                # Load the image
-                image_path = "/Users/kerinpatel/Desktop/Projects-python/Budget-app/images/bank_verified.png"
-                
-                image = ctk.CTkImage(Image.open(image_path), size=(26, 26))
-                # Create a ctk Label widget to display the image
-                label = ctk.CTkLabel(frame, image= image, anchor="e", text="", fg_color="transparent")
-
-                # Display the label
-                label.grid(row=0, column=1, sticky="ew", pady=5)
-                print("placed")
+            Update_button.grid(row=i + 4, column=1, columnspan =1, rowspan = 1, sticky="wesn",pady=1, padx = 5)
+            
             
         expense_counter += 1
 
@@ -314,7 +317,7 @@ class Main_frame(ctk.CTkFrame):
         ctk.CTkButton(scrollable_frame, text="Go back",command = go_back,border_width = border_Width,hover_color=hover_color,
                         border_color=border_Color,text_color=text_Color,fg_color=background).grid(row=2,column=0, columnspan=1, rowspan=3, sticky="ewn")
 
-    
+
     def create_control_buttons_frame(self):
         #fg_color = "#bebec2" if row % 2 == 0 else "#71ace3"
         background = "#39ace7"
@@ -798,8 +801,9 @@ class Main_frame(ctk.CTkFrame):
         # Define the drop event handler
         def handle_drop():
             path = filedialog.askopenfilename(initialdir="/Users/kerinpatel/Desktop",title="select a file to process", filetypes= (("pdf files" , "*.PDF"),))
-            self.Controller.Process_pdf(path)
+            return_list = self.Controller.Process_pdf(path)
             #self.PDF_process_screen(expense_list)
+            self.view_expense_list(return_list)
             
 
         select = ctk.CTkButton(self.control_frame_view,

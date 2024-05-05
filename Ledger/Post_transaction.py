@@ -48,7 +48,8 @@ class Add_Transaction:
 
         except mysql.connector.Error as err:
             print(f"Error: {err}")
-
+        if Bank_verified == True:
+            return last_inserted_id
         
         # Close the cursor and connection
         cursor.close()

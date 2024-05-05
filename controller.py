@@ -182,23 +182,6 @@ class Controller:
         return_list = self.view_table.View_all_table(db_host, db_user, db_password, db_name)
         return return_list
     
-    def List_injector(self, List):
-        
-        for i in range(len(List)):
-            #if date == "****-12-31":
-                
-            date = List[i][0]
-            note = List[i][1]
-            amount = List[i][2]
-            category = List[i][3]
-            sub_category = List[i][4]
-            self.add_transaction(date, note, amount, category, sub_category,True)
-        
-        date = datetime.strptime(List[-1][0], "%Y-%m-%d")
-        table_name = f"Budget{date.year}"
-        db_host, db_user, db_password, db_name = self.db_connecter()
-        self.checking_account_update.Update_Checking_account(db_host, db_user,db_password,db_name,table_name,date.year)
-
                 
     def Update_expense(self,transaction_ID,transaction_date,new_category,year):
         db_host, db_user, db_password, db_name = self.db_connecter()
@@ -210,8 +193,8 @@ class Controller:
             return message
     def Process_pdf(self, path_name):
         db_host, db_user, db_password, db_name = self.db_connecter()
-        return_list = self.sort_data.extract_lines(path_name,db_host, db_user, db_password, db_name)
-        self.List_injector(return_list)
+        return_list = self.sort_data.extract_lines(db_host, db_user, db_password, db_name,path_name)
+        return return_list
         
 
     
