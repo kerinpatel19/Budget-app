@@ -164,13 +164,13 @@ class Main_frame(ctk.CTkFrame):
                     ]
             ctk.CTkLabel(frame,
                             text=f"Transaction ID  - ",
-                            fg_color= "#0784b5", # dark blue
+                            fg_color= "#0784b5", # dark_blue
                             bg_color="transparent",
                             anchor="e",
                             text_color="black").grid(row=0, column=0, sticky="ew", pady=5)
             ctk.CTkLabel(frame,
                             text=return_list[i][0],
-                            fg_color= "#0784b5", # dark blue
+                            fg_color= "#0784b5", # dark_blue
                             bg_color="transparent",
                             anchor="w",
                             text_color="black",).grid(row=0, column=1, sticky="ew", pady=5)
@@ -707,14 +707,14 @@ class Main_frame(ctk.CTkFrame):
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
         background = "#bebec2" #black
-        background2 = "#71ace3" # light blue 
-        background3 = "#39ace7" #bright blue 
-        background4 = "#0784b5" # dark blue
+        light_blue = "#71ace3" # light blue 
+        bright_blue = "#39ace7" #bright blue 
+        dark_blue = "#0784b5" # dark_blue
         text_color = "black"
         header = ctk.CTkLabel(self.control_frame_view,
                                 text = "Add more years",
                                 text_color=text_color,
-                                fg_color=background4,
+                                fg_color=dark_blue,
                                 width=420,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -724,7 +724,7 @@ class Main_frame(ctk.CTkFrame):
         label1 = ctk.CTkLabel(self.control_frame_view,
                                 text = "years",
                                 text_color=text_color,
-                                fg_color=background3,
+                                fg_color=bright_blue,
                                 width=20,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -737,7 +737,7 @@ class Main_frame(ctk.CTkFrame):
         Entry.grid(row=2, column=0)
         ctk.CTkLabel(self.control_frame_view, text="Current available years",
                             justify='center',
-                            fg_color=background3,
+                            fg_color=bright_blue,
                             corner_radius = 2,
                             text_color="black"
                             ).grid(row=1, column=1, sticky="ewns", padx=1)
@@ -836,14 +836,14 @@ class Main_frame(ctk.CTkFrame):
             widget.destroy()
             
         background = "#bebec2" #black
-        background2 = "#71ace3" # light blue 
-        background3 = "#39ace7" #bright blue 
-        background4 = "#0784b5" # dark blue
+        light_blue = "#71ace3" # light blue 
+        bright_blue = "#39ace7" #bright blue 
+        dark_blue = "#0784b5" # dark_blue
         text_color = "black"
         header = ctk.CTkLabel(self.control_frame_view,
                                 text = "Add Starting Balance",
                                 text_color=text_color,
-                                fg_color=background4,
+                                fg_color=dark_blue,
                                 width=420,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -853,7 +853,7 @@ class Main_frame(ctk.CTkFrame):
         Checking = ctk.CTkLabel(self.control_frame_view,
                                 text = "Checking",
                                 text_color=text_color,
-                                fg_color=background3,
+                                fg_color=bright_blue,
                                 width=20,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -869,7 +869,7 @@ class Main_frame(ctk.CTkFrame):
         Bail_out = ctk.CTkLabel(self.control_frame_view,
                                 text = "Bail out",
                                 text_color=text_color,
-                                fg_color=background3,
+                                fg_color=bright_blue,
                                 width=20,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -885,7 +885,7 @@ class Main_frame(ctk.CTkFrame):
         Saving = ctk.CTkLabel(self.control_frame_view,
                                 text = "Saving",
                                 text_color=text_color,
-                                fg_color=background3,
+                                fg_color=bright_blue,
                                 width=20,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -923,14 +923,14 @@ class Main_frame(ctk.CTkFrame):
         for widget in self.control_frame_view.winfo_children():
             widget.destroy()
         background = "#bebec2" #black
-        background2 = "#71ace3" # light blue 
-        background3 = "#39ace7" #bright blue 
-        background4 = "#0784b5" # dark blue
+        light_blue = "#71ace3" # light blue 
+        bright_blue = "#39ace7" #bright blue 
+        dark_blue = "#0784b5" # dark_blue
         text_color = "black"
         header = ctk.CTkLabel(self.control_frame_view,
                                 text = "Remove years",
                                 text_color=text_color,
-                                fg_color=background4,
+                                fg_color=dark_blue,
                                 width=420,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -940,7 +940,7 @@ class Main_frame(ctk.CTkFrame):
         label1 = ctk.CTkLabel(self.control_frame_view,
                                 text = "years",
                                 text_color=text_color,
-                                fg_color=background3,
+                                fg_color=bright_blue,
                                 width=20,height= 30,
                                 justify="center",
                                 font=("arial", 15)
@@ -953,7 +953,7 @@ class Main_frame(ctk.CTkFrame):
         Entry.grid(row=2, column=0)
         ctk.CTkLabel(self.control_frame_view, text="Current available years",
                             justify='center',
-                            fg_color=background3,
+                            fg_color=bright_blue,
                             corner_radius = 2,
                             text_color="black"
                             ).grid(row=1, column=1, sticky="ewns", padx=1)
@@ -1038,9 +1038,9 @@ class Main_frame(ctk.CTkFrame):
         
         added_tranctions = []
         background = "#bebec2" #black
-        background2 = "#71ace3" # light blue 
-        background3 = "#39ace7" #bright blue 
-        background4 = "#0784b5" # dark blue
+        light_blue = "#71ace3" # light blue 
+        bright_blue = "#39ace7" #bright blue 
+        background4 = "#0784b5" # dark_blue
         text_color = "black"
         width = 5
         height = 20
@@ -1077,7 +1077,7 @@ class Main_frame(ctk.CTkFrame):
         # Account labels
         accounts = ["Checking", "Bail out", "Savings","-------------","Monthly Income","Monthly Expense","Monthly transfer In","Monthly transfer Out"]
         for idx, account in enumerate(accounts, start=2):
-            ctk.CTkLabel(self.monthly_view, text=account,bg_color=background2, text_color=text_color, width=width,height=height, justify="center", anchor="center").grid(row=idx, column=0, sticky="ew")
+            ctk.CTkLabel(self.monthly_view, text=account,bg_color=light_blue, text_color=text_color, width=width,height=height, justify="center", anchor="center").grid(row=idx, column=0, sticky="ew")
 
         # Starting balances
         starting_balances = [start_checking, start_bailout, start_saving,"",monthly_income,monthly_expenses,monthly_transfer_In,monthly_transfer_Out]
@@ -1105,17 +1105,16 @@ class Main_frame(ctk.CTkFrame):
         # Clear existing content of control_frame_view
         for widget in self.Activity_frame.winfo_children():
             widget.destroy()
-        frame = ctk.CTkScrollableFrame(self.Activity_frame,
-                                        height=40
-                                        )
-        frame.pack(expand=True,fill="both")
+        
 
         sub_catogeiors = self.get_sub_category_list("all")
         tab_amount = len(sub_catogeiors)
         background = "#bebec2" #black
-        background2 = "#71ace3" # light blue 
-        background3 = "#39ace7" #bright blue 
-        background4 = "#0784b5" # dark blue
+        light_blue = "#71ace3" # light blue 
+        bright_blue = "#39ace7" #bright blue 
+        dark_blue = "#0784b5" # dark_blue
+        grey = "#bebec2"#grey
+        
         text_Color = "black"
         hover_color = "#9bd4e4"
         border_Width = 2
@@ -1123,21 +1122,27 @@ class Main_frame(ctk.CTkFrame):
         width = 2
         def summit(subcategory):
             self.view_expense(start_date, subcategory)
-        y_offset = 0  # Initial y-coordinate offset
         
         summary_list = self.Controller.view_sub_category_summary(start_date)
-        
-        if sub_catogeiors == None:
+        year = int(datetime.strptime(start_date, "%Y-%m-%d").strftime("%Y"))
+        year_summary = self.Controller.update_year_summary(year)
+        frame = ctk.CTkScrollableFrame(self.Activity_frame,
+                                            height=40
+                                            )
+        frame.pack(expand=True,fill="both")
+        if len(summary_list) == 0:
             inner_frame = ctk.CTkFrame(frame)
             inner_frame.pack(fill="x")  # Use pack to manage inner_frame
             label_1 = ctk.CTkLabel(inner_frame,
                                     text=f"No Transactions available",
                                     width=100,
-                                    bg_color=background4,
+                                    bg_color=dark_blue,
                                     text_color=text_Color,
                                     corner_radius=2,wraplength=100)
-            label_1.pack( fill = "both")  # Use pack to manage label_1
-        elif sub_catogeiors != None:
+            label_1.pack( fill = "x")  # Use pack to manage label_1
+            
+        else:
+                
             for i in range(len(summary_list)):
                 subcategory = summary_list[i][0]
                 total_amount = summary_list[i][1]
@@ -1147,7 +1152,7 @@ class Main_frame(ctk.CTkFrame):
                 label_1 = ctk.CTkLabel(inner_frame,
                                         text=f"{subcategory}",
                                         width=100,
-                                        bg_color=background4,
+                                        bg_color=dark_blue,
                                         text_color=text_Color,
                                         corner_radius=2,wraplength=100)
                 label_1.pack(side="left")  # Use pack to manage label_1
@@ -1162,8 +1167,8 @@ class Main_frame(ctk.CTkFrame):
                                         corner_radius=2)
                 label_2.pack(side="left")  # Use pack to manage label_2
 
-                view_button = ctk.CTkButton(inner_frame, text="View Transactions", bg_color=background3,
-                                            fg_color=background2,
+                view_button = ctk.CTkButton(inner_frame, text="View Transactions", bg_color=bright_blue,
+                                            fg_color=light_blue,
                                             text_color=text_Color,
                                             hover_color=hover_color,
                                             border_width=border_Width,
@@ -1172,10 +1177,68 @@ class Main_frame(ctk.CTkFrame):
                                             command=lambda subcategory=subcategory: summit(subcategory)
                                             )
                 view_button.pack(side="left")  # Use pack to manage view_button
+        header = ctk.CTkLabel(frame,
+                                text="Yearly Summary",
+                                fg_color=dark_blue,
+                                bg_color="transparent",
+                                anchor="center",
+                                text_color="black").pack(fill = "x", expand = True, pady=2)
+        labels = ["Month", "Checking account", "Bail out account", "Saving account"]
+        inner_frame_1 = ctk.CTkFrame(frame)
+        inner_frame_1.pack(fill="x")
+        for i in range(len(labels)):
+            # Use pack to manage inner_frame
+            ctk.CTkLabel(inner_frame_1,
+                        width=100,
+                        text=f"{labels[i]}",
+                        fg_color=dark_blue,
+                        bg_color="transparent",
+                        anchor="center",
+                        text_color="black",
+                        corner_radius=2, wraplength=85).grid(row=0, column=i, sticky="nsew", padx=2, pady=2)
+        
+        for i in range(len(year_summary)):
+            month = datetime.strptime(f"{year_summary[i][0]}", '%m').strftime('%B')
+            checking = float(year_summary[i][1])
+            bail_out = float(year_summary[i][2])
+            saving = float(year_summary[i][3])
 
+            inner_frame = ctk.CTkFrame(frame)
+            inner_frame.pack(fill="x")  # Use pack to manage inner_frame
 
-                y_offset += 30  # Increase the y-coordinate offset for the next widget
+            label_1 = ctk.CTkLabel(inner_frame,
+                                    text=month,
+                                    width=100,
+                                    fg_color=light_blue,
+                                    text_color=text_Color,
+                                    corner_radius=2, wraplength=100)
+            label_1.grid(row=i, column=0, sticky="nsew", padx=2, pady=2)
 
+            label_2 = ctk.CTkLabel(inner_frame,
+                                    text=checking,
+                                    width=100,
+                                    fg_color=grey,
+                                    text_color=text_Color,
+                                    corner_radius=2, wraplength=100)
+            label_2.grid(row=i, column=1, sticky="nsew", padx=2, pady=2)
+
+            label_3 = ctk.CTkLabel(inner_frame,
+                                    text=bail_out,
+                                    width=100,
+                                    fg_color=grey,
+                                    text_color=text_Color,
+                                    corner_radius=2, wraplength=100)
+            label_3.grid(row=i, column=2, sticky="nsew", padx=2, pady=2)
+
+            label_4 = ctk.CTkLabel(inner_frame,
+                                    text=saving,
+                                    width=100,
+                                    fg_color=grey,
+                                    text_color=text_Color,
+                                    corner_radius=2, wraplength=100)
+            label_4.grid(row=i, column=3, sticky="nsew", padx=2, pady=2)
+
+            
 
         
 Driver('Budget app', '1200X1200').mainloop()

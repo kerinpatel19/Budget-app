@@ -135,7 +135,7 @@ class line_extract:
                                     last_inserted_id = cursor.lastrowid
                                     # Get the number of affected rows
                                     num_affected_rows = cursor.rowcount
-                                    print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
+                                    #print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
                                     transaction_ID = post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, date, "Checking_Account", transaction_note, transaction_amount, "Income",transaction_Type,bank_verified)
                                     
                                 except mysql.connector.Error as err:
@@ -175,7 +175,7 @@ class line_extract:
                                     last_inserted_id = cursor.lastrowid
                                     # Get the number of affected rows
                                     num_affected_rows = cursor.rowcount
-                                    print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
+                                    #print(f"Data inserted successfully. Last Inserted ID: {last_inserted_id}, Affected Rows: {num_affected_rows}")
                                     transaction_ID = post_transaction.Add_Transaction(db_host, db_user, db_password, db_name, date, "Checking_Account", transaction_note, transaction_amount, "Expense", transaction_Type,bank_verified)
                                     
                                 except mysql.connector.Error as err:

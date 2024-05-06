@@ -5,6 +5,7 @@ from Output_data.get_category_by_control_category import GetCategory
 from Output_data import view_expense_by_dates
 from Output_data.view_table_names import View_table_names
 from Output_data.view_sub_category_summary import GetCategoryAmount
+from Output_data.yearly_summary import Get_summary
 from Input_data.Add_starting_balance import StartBalance
 from Input_data.Add_income import Add_Income
 from Input_data.Add_expense import Add_Expense
@@ -26,6 +27,7 @@ class Controller:
         self.find_expense_by_date = view_expense_by_dates.view_Expense_date()
         self.view_table = View_table_names()
         self.sub_category_summary = GetCategoryAmount()
+        self.update_summary = Get_summary()
         self.add_starting_bal= StartBalance()
         self.add_income = Add_Income()
         self.add_expense = Add_Expense()
@@ -94,7 +96,10 @@ class Controller:
                 for i in range(len(List)):
                     return_list.append(List[i])
         return return_list
-    
+    def update_year_summary(self,year):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        return_list = self.update_summary.get_month_data(db_host, db_user, db_password, db_name, year)
+        return return_list
     def view_sub_category_summary(self, start_date):
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.sub_category_summary.get_category_amount(db_host, db_user, db_password, db_name, start_date)

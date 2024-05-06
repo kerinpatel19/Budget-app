@@ -5,7 +5,7 @@ controller = Controller()
 summary = Get_summary()
 
 db_host, db_user, db_password, db_name = controller.db_connecter()
-year = 2024
-list_return = summary.get_month_data(db_host, db_user, db_password, db_name, year)
+start_Date = ""
+list_return = controller.update_year_summary(start_Date)
 
 print(list_return)
