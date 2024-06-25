@@ -14,6 +14,9 @@ def upload_file(file_path):
     # Print each line with an index number
     for i, line in enumerate(lines):
         print(f"{i}: {line}")
+        if i == 50:
+            break
 
-upload_file('/Users/kerinpatel/Desktop/20240123-statements-1859--2.pdf')
-
+upload_file('/Users/kerinpatel/Desktop/data/20240314-statements-0651-.pdf')
+#/Users/kerinpatel/Desktop/data/20240314-statements-0651-.pdf
+#/Users/kerinpatel/Desktop/data/20240214-statements-0651-.pdf

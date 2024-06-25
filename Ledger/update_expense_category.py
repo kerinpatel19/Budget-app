@@ -2,7 +2,7 @@ import mysql.connector
 
 class Update_expense_category:
     @classmethod
-    def update_category(db_host, db_user, db_password, db_name,transaction_ID,transaction_date,new_category,year):
+    def update_category(cls,db_host, db_user, db_password, db_name,transaction_ID,transaction_date,new_category,year):
         
         # Establish a connection to MySQL
         db_connection = mysql.connector.connect(
@@ -19,7 +19,7 @@ class Update_expense_category:
             table_name = f"Posted_transactions_{year}"
 
             # Update the Sub_Category for the given transaction_ID
-            update_query = f"UPDATE {table_name} SET Sub_Category = %s WHERE ID = %s AND TransactionDate = %s"
+            update_query = f"UPDATE {table_name} SET Category = %s WHERE ID = %s AND TransactionDate = %s"
             cursor.execute(update_query, (new_category, transaction_ID,transaction_date))
             db_connection.commit()
 
@@ -27,7 +27,7 @@ class Update_expense_category:
 
         except mysql.connector.Error as err:
             db_connection.rollback()
-            return f"Failed to update Category for transaction ID {transaction_ID}."
+            return f"Failed to update Category for transaction ID {transaction_ID}.\n -  {err}"
 
         finally:
             # Close the cursor and connection

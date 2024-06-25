@@ -41,9 +41,34 @@ class line_extract:
         regex_list = [
             r"^\d\d/\d\d",  # Date format (mm/dd)
         ]
-        date_idex_line = 4
-        starting_date_index = lines[date_idex_line]
+        
+        def find_recurring_transactions(note, table_name):
+            query = f"""SELECT Category FROM {table_name}
+                    WHERE Note LIKE '%{note.replace("'", "''")}%'
+                    ORDER BY CHAR_LENGTH(Note) - CHAR_LENGTH(REPLACE(Note, ' ', '')) DESC, CHAR_LENGTH(Note) DESC
+                    LIMIT 1;"""
+            cursor.execute(query)
+            row = cursor.fetchone()
+
+            if row is not None:
+                return row[0]
+            else:
+                return None
+        date_line = 4
+        
+        
+        test = use_multi_regex(lines[date_line],[r'\b(\w+ \d{1,2}, \d{4}) through (\w+ \d{1,2}, \d{4})\b'])
+        if test != True:
+            date_line = 25
+            
+        
+        
+            
+        starting_date_index = lines[date_line]
         starting_date = starting_date_index.split()
+        
+        
+            
         
         inserted = 1  # Initialize the inserted count outside the loop
         i = 111  # Start from line 111
@@ -102,6 +127,7 @@ class line_extract:
                         # Access the year attribute after ensuring start_date is a datetime object
                         year = transaction_date.year
                         table_name = f"Budget{year}"
+                        posted_table_name = f"Posted_transactions_{year}"
                         transaction_ID = None
                         
                         if transaction_Type == "Income-Unsorted":
@@ -128,6 +154,10 @@ class line_extract:
                                     final_income
                                     )
                                 
+                                new_sub_category = find_recurring_transactions(transaction_note, posted_table_name)
+                                if new_sub_category != None:
+                                    transaction_Type = new_sub_category
+    
                                 try:
                                     cursor.execute(insert_query, insert_values)
                                     db_connection.commit()
@@ -167,6 +197,9 @@ class line_extract:
                                     date,  
                                     final_expense
                                     )
+                                new_sub_category = find_recurring_transactions(transaction_note, posted_table_name)
+                                if new_sub_category != None:
+                                    transaction_Type = new_sub_category
                                 
                                 try:
                                     cursor.execute(insert_query, insert_values)

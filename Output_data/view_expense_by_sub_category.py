@@ -22,7 +22,7 @@ class view_Expense:
         
         return_list = []
         try:
-            select_query = F"SELECT * FROM {table_name} WHERE YEAR(TransactionDate) = %s AND MONTH(TransactionDate) = %s AND Sub_Category = %s;"
+            select_query = F"SELECT * FROM {table_name} WHERE YEAR(TransactionDate) = %s AND MONTH(TransactionDate) = %s AND Category = %s;"
             cursor.execute(select_query, (year, month ,sub_catogeiors))
 
             rows = cursor.fetchall()

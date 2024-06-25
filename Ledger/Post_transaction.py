@@ -28,7 +28,7 @@ class Add_Transaction:
         
         
         insert_data_query = f"""
-            INSERT INTO {table_name} (TransactionDate, Account, Note, Amount, Category, Sub_Category, Bank_verified) 
+            INSERT INTO {table_name} (TransactionDate, Account, Note, Amount, Control_Category, Category, Bank_verified) 
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
 

@@ -1,0 +1,21 @@
+
+Income=Income
+Income=Tax Refund
+Income=Refund
+Income=Cash back
+Transfer=In Transfer
+Transfer=Out Transfer
+Expense=Wants - Expense
+Expense=Needs - Expense
+Expense=Fixed Expense
+Expense=subscription
+Expense=School
+Expense=Coffee
+Expense=Takeout - Food
+Expense=Grocery - Food
+Expense=Gas station
+Expense=Taxes
+Expense=Credit card
+Expense=Loans
+Expense=Car
+Expense=Other

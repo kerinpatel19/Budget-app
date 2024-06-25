@@ -14,11 +14,11 @@ class Create_data_base:
 
             # Create the target database directly
             cursor.execute(f"CREATE DATABASE IF NOT EXISTS {name}")
-            print(f"Database {name} created successfully.")
-
             db_connection.commit()
             # Close the cursor and connection
             cursor.close()
             db_connection.close()
+            return "created successfully"
         except mysql.connector.Error as err:
-            print(f"Error: {err}")
+            return(f"Error: {err}")
+            

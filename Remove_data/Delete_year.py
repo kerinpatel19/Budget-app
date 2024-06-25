@@ -2,7 +2,7 @@ import mysql.connector
 
 class delete_year:
     @classmethod
-    def delete_year_table(db_host, db_user, db_password, db_name,year):
+    def delete_year_table(cls,db_host, db_user, db_password, db_name,year):
         
         # Establish a connection to MySQL
         db_connection = mysql.connector.connect(

@@ -30,11 +30,11 @@ class GetCategoryAmount:
 
             # Construct and execute the SQL query to select Category and Amount for the given month and category
             select_query = f"""
-                SELECT Sub_Category, SUM(Amount) AS TotalAmount
+                SELECT Category, SUM(Amount) AS TotalAmount
                 FROM {table_name}
                 WHERE TransactionDate >= %s
                 AND TransactionDate <= %s
-                GROUP BY Sub_Category
+                GROUP BY Category
             """
             cursor.execute(select_query, (start_date_str, end_date_str))
 

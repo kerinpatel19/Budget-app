@@ -73,8 +73,8 @@ class Create_table:
                 "Account VARCHAR(255)",
                 "Note  VARCHAR(255)",
                 "Amount DECIMAL(10, 2)",
+                "Control_Category VARCHAR(255)",
                 "Category VARCHAR(255)",
-                "Sub_Category VARCHAR(255)",
                 "Bank_verified VARCHAR(255)"
             ]
             table_name_posted = f"Posted_transactions_{year}"
@@ -91,7 +91,7 @@ class Create_table:
             category_columns = [
                 "ID int AUTO_INCREMENT PRIMARY KEY",
                 "Control_Category VARCHAR(255)",
-                "Sub_Category VARCHAR(255)"
+                "Category VARCHAR(255)"
             ]
 
             # Create the Categorys table
@@ -99,26 +99,37 @@ class Create_table:
             cursor.execute(create_table_query5)
             db_connection.commit()
             
-            categories = [
-                ("Income", "Income"),
-                ("Income", "Tax Refund"),
-                ("Income", "Refund"),
-                ("Transfer", "In Transfer"),
-                ("Transfer", "Out Transfer"),
-                ("Expense", "Wants - Expense"),
-                ("Expense", "Needs - Expense"),
-                ("Expense", "Fixed Expense"),
-                ("Expense", "subscription"),
-                ("Expense", "School"),
-                ("Expense", "Takeout - Food"),
-                ("Expense", "Grocery - Food"),
-                ("Expense", "Taxes"),
-                ("Expense", "Other")
-            ]
+            result = []
+            file_path = "/Users/kerinpatel/Desktop/dev/Projects-python/Budget-app/Data_base/Category.txt"
+            with open(file_path, 'r') as file:
+                for line in file:
+                    line = line.strip()
+                    if line:
+                        key, value = line.split('=')
+                        format = (key.strip(), value.strip())
+                        result.append(format)
+            
+            
+            categories = result#[
+                #("Income", "Income"),
+                #("Income", "Tax Refund"),
+                #("Income", "Refund"),
+                #("Transfer", "In Transfer"),
+                #("Transfer", "Out Transfer"),
+                #("Expense", "Wants - Expense"),
+                #("Expense", "Needs - Expense"),
+                #("Expense", "Fixed Expense"),
+                #("Expense", "subscription"),
+                #("Expense", "School"),
+                #("Expense", "Takeout - Food"),
+                #("Expense", "Grocery - Food"),
+                #("Expense", "Taxes"),
+                #("Expense", "Other")
+            #]
 
             for main_category, sub_category in categories:
                 insert_data_query_cat = f"""
-                INSERT INTO {table_name2.lower()} (Category, Sub_Category) 
+                INSERT INTO {table_name2.lower()} (Control_Category, Category) 
                 VALUES (%s, %s)
                 """
                 cursor.execute(insert_data_query_cat, (main_category, sub_category))
@@ -130,6 +141,7 @@ class Create_table:
             print(f"Error: {err}")
             return status
         finally:
+            db_connection.commit()
             # Close the cursor and connection
             cursor.close()
             db_connection.close()

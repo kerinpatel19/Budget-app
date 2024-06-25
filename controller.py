@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from Output_data import view_monthly_budget
 from Output_data import view_expense_by_sub_category
-from Output_data.get_category_by_control_category import GetCategory
+from Output_data.category_controls import GetCategory
 from Output_data import view_expense_by_dates
 from Output_data.view_table_names import View_table_names
 from Output_data.view_sub_category_summary import GetCategoryAmount
@@ -22,6 +22,8 @@ from Remove_data.Delete_expense import Delete_expense
 class Controller:
     
     def __init__(self):
+        self.database_creator = Create_data_base()
+        self.table_creator = Create_table()
         self.view_budget = view_monthly_budget.view_budget()  # Instantiate the view_budget class
         self.find_expense_by_subcategories = view_expense_by_sub_category.view_Expense()
         self.find_expense_by_date = view_expense_by_dates.view_Expense_date()
@@ -34,8 +36,6 @@ class Controller:
         self.Transfer = Transfer_money()
         self.add_fixed_expense = Add_fixed_expense()
         self.get_category = GetCategory()
-        self.database_creator = Create_data_base()
-        self.table_creator = Create_table()
         self.Delete_year = delete_year()
         self.Starter_balance = StartBalance()
         self.sort_data = line_extract()
@@ -49,7 +49,7 @@ class Controller:
         db_user = None
         db_password = None
         db_name = None
-        file_path = "/Users/kerinpatel/Desktop/Projects-python/Budget-app/config.gitingore/database_key.txt"
+        file_path = "/Users/kerinpatel/Desktop/dev/Projects-python/Budget-app/database_info/database_key.txt"
         try:
             with open(file_path, 'r') as file:
                 lines = file.readlines()
@@ -69,6 +69,85 @@ class Controller:
             print(f"Error reading database key file: {e}")
 
         return db_host, db_user, db_password, db_name
+    
+    def add_new_database(self,db_host, db_user, db_password, db_name, Message=True):
+        if Message == True:
+            message_1 = self.database_creator.create_database_main(db_host, db_user, db_password, db_name)
+            path = f"/Users/kerinpatel/Desktop/Projects-python/Budget-app/database_info/other_db/{db_name}_database_key.txt"
+            if message_1 == "created successfully":
+                message_2 = self.update_database_key(view=False, db_host=db_host, db_user=db_user, db_password=db_password, db_name=db_name, file_path=path)
+                message = f"Database {message_1} - {db_name}_database_key.txt"
+                return message
+            else:
+                return message_1
+        elif Message == False:
+            not_return = self.database_creator.create_database_main(db_host, db_user, db_password, db_name)
+            pass
+
+    
+    def update_database_key(self,view=True, db_host=None, db_user=None, db_password=None, db_name=None, file_path=None):
+        if file_path == None:
+            file_path = "/Users/kerinpatel/Desktop/Projects-python/Budget-app/database_info/current_database_key.txt"
+        
+        current_values = {}
+        message = []
+        # Print the current values if view is True
+        if view:
+
+
+            # Read the current database key values
+            try:
+                with open(file_path, 'r') as file:
+                    lines = file.readlines()
+                    for line in lines:
+                        key, value = line.strip().split('=')
+                        current_values[key] = value
+            except FileNotFoundError:
+                print("Error: Database key file not found.")
+                return
+            except Exception as e:
+                print(f"Error reading database key file: {e}")
+                return
+            
+            return_list = [
+                current_values.get('DB_HOST'),
+                current_values.get('DB_USER'),
+                current_values.get('DB_PASSWORD'),
+                current_values.get('DB_NAME'),
+                ]
+            return return_list
+        elif view == False:
+            try:
+                with open(file_path, 'w') as file:
+                    
+                    # Update the values if provided
+                    if db_host is not None:
+                        current_values['DB_HOST'] = db_host
+                        message.append([f"Host updated {db_host}"])
+
+                    if db_user is not None:
+                        current_values['DB_USER'] = db_user
+                        message.append([f"User updated {db_user}"])
+
+                    if db_password is not None:
+                        current_values['DB_PASSWORD'] = db_password
+                        message.append([f"Password updated {db_password}"])
+
+                    if db_name is not None:
+                        current_values['DB_NAME'] = db_name
+                        message.append([f"Name updated {db_name}"])
+                    
+                    for key, value in current_values.items():
+                        file.write(f"{key}={value}\n")
+            except Exception as e:
+                message.append([f"Error writing to database key file: {e}"])
+        
+            return message
+
+        else:
+            return "error could not create a database"
+        
+        
     def check_and_fix_date(self,date_str):
         try:
             # Attempt to parse the date string with the expected format
@@ -83,7 +162,9 @@ class Controller:
                 # If both attempts fail, return None or raise an exception, depending on your requirements
                 return None
 
-    def sub_category(self,Control_Category):
+
+
+    def control_category(self,Control_Category):
         return_list = []
         db_host, db_user, db_password, db_name = self.db_connecter()
         if Control_Category != "all":
@@ -93,9 +174,40 @@ class Controller:
             for i in range(len(Control_Category_list)):
                 category = Control_Category_list[i]
                 List = self.get_category.get_category(db_host, db_user, db_password, db_name,category)
+                if List == "Retry":
+                    self.control_category("all")
                 for i in range(len(List)):
                     return_list.append(List[i])
         return return_list
+    
+    def all_category(self):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        return_list = self.get_category.view_all_category(db_host, db_user, db_password, db_name)
+        return return_list
+    
+    def add_category(self,control, category):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        message = self.get_category.add_category(db_host, db_user, db_password, db_name, control, category)
+        return message
+    
+    def delete_category(self,control, category, reassign):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        if reassign != None:
+            message = self.get_category.delete_category(db_host, db_user, db_password, db_name, control, category, reassign)
+        else:
+            message = self.get_category.delete_category(db_host, db_user, db_password, db_name, control, category)
+        return message
+    
+    def change_category(self, old_control, old_category, new_control, new_category, year=None, message=None):
+        db_host, db_user, db_password, db_name = self.db_connecter()
+        if year == None and message == None:
+            message_r = self.get_category.edit_category(db_host, db_user, db_password, db_name, old_control, old_category, new_control, new_category)
+        elif message == False:
+            message_r = self.get_category.change_category(db_host, db_user, db_password, db_name, old_control, old_category, new_control, new_category, year, message=False)
+        else:
+            message_r = self.get_category.change_category(db_host, db_user, db_password, db_name, old_control, old_category, new_control, new_category, year, message=True)
+        return message_r
+    
     def update_year_summary(self,year):
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.update_summary.get_month_data(db_host, db_user, db_password, db_name, year)
@@ -103,7 +215,10 @@ class Controller:
     def view_sub_category_summary(self, start_date):
         db_host, db_user, db_password, db_name = self.db_connecter()
         return_list = self.sub_category_summary.get_category_amount(db_host, db_user, db_password, db_name, start_date)
-        return return_list
+        if return_list != None:
+            return return_list
+        else:
+            return f"Error"
 
     def update_table(self,lookup_month_name, year):
         db_host, db_user, db_password, db_name = self.db_connecter()

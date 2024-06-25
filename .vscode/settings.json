@@ -1,16 +1,10 @@
 {
-    "git.ignoreLimitWarning": true,
     "cSpell.words": [
-        "catogeiors",
+        "Categorys",
         "columnspan",
-        "dateutil",
+        "errorcode",
         "ewns",
-        "lastrowid",
-        "nesw",
-        "nwes",
-        "relativedelta",
-        "rowspan",
-        "saveing",
-        "saveings"
+        "ipadx",
+        "ipady"
     ]
 }
