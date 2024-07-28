@@ -31,6 +31,7 @@ class view_Expense:
                 Id = row[0]
                 date = row[1].strftime('%Y-%m-%d')
                 note = row[3].strip()
+                amount = f"$ {float(row[4]):,.2f}"
                 category = row[6].strip()
                 bank_verified = row[7]
                 
@@ -39,7 +40,7 @@ class view_Expense:
                     date,
                     row[2],
                     note,
-                    float(row[4]),
+                    amount,
                     category,
                     bank_verified
                 ]

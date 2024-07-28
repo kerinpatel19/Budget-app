@@ -39,6 +39,7 @@ class Get_summary:
                     Checking = float(row[0])
                     bail_out = float(row[1])
                     saving = float(row[2])
+                    
                     list_format = [month,Checking,bail_out,saving]
                     return_list.append(list_format)
 

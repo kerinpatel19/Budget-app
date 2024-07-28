@@ -52,13 +52,13 @@ class view_budget:
                     #print(f"[{row[0]}] checking account :-{row[1]} Bail out :-{row[2]} Savings :- {row[4]} Transfer out {row[6]} Transfer In {row[7]} Income {row[8]} Expense {row[9]}")
                     list_format = [
                         lookup_date, #date
-                        float(row[1]), #checking
-                        float(row[2]), #bail out
-                        float(row[4]), #saving
-                        float(row[6]), #transfer out
-                        float(row[7]), #transfer in 
-                        float(row[8]), #income
-                        float(row[9]) #expense
+                        f"$ {float(row[1]):,.2f}", #checking
+                        f"$ {float(row[2]):,.2f}", #bail out
+                        f"$ {float(row[4]):,.2f}", #saving
+                        f"$ {float(row[6]):,.2f}", #transfer out
+                        f"$ {float(row[7]):,.2f}", #transfer in 
+                        f"$ {float(row[8]):,.2f}", #income
+                        f"$ {float(row[9]):,.2f}" #expense
                     ]
                     return_list.append(list_format)
                 

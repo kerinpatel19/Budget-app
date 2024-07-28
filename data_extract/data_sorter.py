@@ -11,7 +11,7 @@ update = update_all_accounts.update_all_accounts()
 
 class line_extract:
     @classmethod
-    def extract_lines(cls,db_host, db_user, db_password, db_name,file_path):
+    def chase_statement_process(cls,db_host, db_user, db_password, db_name,file_path,account):
         user_home = os.path.expanduser("~")
         
         # Establish a connection to MySQL
