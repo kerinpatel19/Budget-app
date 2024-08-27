@@ -49,7 +49,7 @@ class Controller:
         db_user = None
         db_password = None
         db_name = None
-        file_path = "/Users/kerinpatel/Desktop/dev/Projects-python/Budget-app/database_info/database_key.txt"
+        file_path = "/Users/kerinpatel/documents/dev/Projects-python/Budget-app/database_info/database_key.txt"
         try:
             with open(file_path, 'r') as file:
                 lines = file.readlines()
